@@ -27,6 +27,7 @@
 	<button
 		class="bg-lime-400 border p-2"
 		onclick={() => {
+			errorMessage = '';
 			login(username, password, canteen).catch((e) => {
 				console.log(typeof e);
 				if (typeof e === 'string') {
