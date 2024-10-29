@@ -1,18 +1,9 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
+	"codeberg.org/tomkoid/stravule/backend/internal/server"
 )
 
 func main() {
-	e := echo.New()
-	e.HideBanner = true
-
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-
-	e.Logger.Fatal(e.Start(":1323"))
+	server.StartServer()
 }
