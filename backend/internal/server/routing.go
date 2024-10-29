@@ -7,6 +7,7 @@ import (
 
 func initAPI(e *echo.Group) error {
 	e.POST("/login", routes.Login)
+	e.POST("/orders", routes.Orders)
 
 	return nil
 }
