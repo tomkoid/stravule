@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 type orderRequest struct {
@@ -94,21 +97,27 @@ func Orders(sid string, canteen string) ([][]order, error) {
 	if derr != nil {
 		return nil, derr
 	}
-	//
-	var orders [][]order
-	//
-	// // for each table in the json response
-	// for _, table := range response {
-	// 	orders = append(orders, table)
-	// }
 
-	for tableName, tableOrders := range response {
-		// fmt.Println("==============xd================")
-		// fmt.Println(tableName, orders)
+	// Extract keys and sort based on numeric suffix
+	keys := make([]string, 0, len(response))
+	for k := range response {
+		keys = append(keys, k)
+	}
+
+	// Sort keys by numeric suffix
+	sort.Slice(keys, func(i, j int) bool {
+		// Extract numeric part from "table" prefix
+		numI, _ := strconv.Atoi(strings.TrimPrefix(keys[i], "table"))
+		numJ, _ := strconv.Atoi(strings.TrimPrefix(keys[j], "table"))
+		return numI < numJ
+	})
+
+	var orders [][]order
+
+	for tableName, tableOrders := range keys {
 		_ = tableName
-		orders = append(orders, tableOrders)
+		orders = append(orders, response[tableOrders])
 	}
 
 	return orders, nil
-	// return response.SID, response.Cislo, nil
 }
