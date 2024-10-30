@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/login';
 	import { onMount } from 'svelte';
 
@@ -36,8 +37,8 @@
 					errorMessage = e.message;
 				}
 			});
+			goto('/orders');
 		}}>Login</button
 	>
 	<p class="text-red-600">{errorMessage}</p>
 </div>
-
