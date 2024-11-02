@@ -44,6 +44,9 @@ type order struct {
 	Version         int        `json:"version"`
 	CasKonec        string     `json:"casKonec"`
 	CasOdhlaseni    string     `json:"casOdhlaseni"`
+
+	selectedByIncludeFilter bool
+	selectedByExcludeFilter bool
 }
 
 // Returns a list of orders

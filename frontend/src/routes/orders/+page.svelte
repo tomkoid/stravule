@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { loadOrders } from '$lib/api/orders';
+	import { loadFilters } from '$lib/api/filters';
 	import type { Order } from '$lib/api/orders';
+	import type { Filters } from '$lib/api/filters';
 
 	let orders: Order[][] | undefined = $state();
+	let filters: Filters | undefined = $state();
 	let selected: boolean[][] | undefined = $state();
 	let pickOrders: boolean = $state(false);
 
@@ -24,6 +27,7 @@
 			localStorage.getItem('canteen')!,
 			pickOrders
 		);
+		filters = await loadFilters(localStorage.getItem('sid')!, localStorage.getItem('canteen')!)!;
 		renderOrders(orders);
 	});
 
@@ -44,13 +48,33 @@
 			console.log(selected);
 		}}>print order list object to console</button
 	>
+	<div class="flex flex-wrap flex-row justify-between gap-2">
+		<div class="flex gap-2">
+			{#if filters}
+				{#each filters.include as filter}
+					<div class="bg-lime-200 shadow shadow-lime-200 rounded-xl border p-2">
+						{filter}
+					</div>
+				{/each}
+			{/if}
+		</div>
+		<div class="flex gap-2">
+			{#if filters}
+				{#each filters.exclude as filter}
+					<div class="bg-red-200 shadow shadow-red-200 rounded-xl border p-2">
+						{filter}
+					</div>
+				{/each}
+			{/if}
+		</div>
+	</div>
 	<div class="flex gap-2">
-		<input type="checkbox" bind:checked={pickOrders} /> Pick orders
+		<input type="checkbox" bind:checked={pickOrders} /> Show picked orders by Stravule
 	</div>
 	{#if orders && selected}
 		{#each orders as orderTable, orderTableIndex}
 			{#if orderTable}
-				<div class="bg-lime-200 rounded-xl border p-2">
+				<div class="bg-gray-200 shadow-md shadow-gray-200 rounded-xl border p-2">
 					{#each orderTable as order, orderIndex}
 						<div class="flex flex-wrap flex-row gap-2">
 							<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
