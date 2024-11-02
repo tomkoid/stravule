@@ -41,27 +41,21 @@
 	});
 </script>
 
-<div class="flex flex-col flex-wrap gap-3">
-	<button
-		class="bg-blue-200 border rounded-xl p-2 mb-2"
-		onclick={() => {
-			console.log(selected);
-		}}>print order list object to console</button
-	>
-	<div class="flex flex-wrap flex-row justify-between gap-2">
-		<div class="flex gap-2">
+<div class="flex flex-col flex-nowrap gap-3">
+	<div class="flex flex-wrap flex-row md:justify-between gap-2">
+		<div class="flex flex-wrap gap-2">
 			{#if filters}
 				{#each filters.include as filter}
-					<div class="bg-lime-200 shadow shadow-lime-200 rounded-xl border p-2">
+					<div class="bg-ctp-green text-ctp-base shadow shadow-ctp-green rounded-xl p-2">
 						{filter}
 					</div>
 				{/each}
 			{/if}
 		</div>
-		<div class="flex gap-2">
+		<div class="flex flex-wrap gap-2">
 			{#if filters}
 				{#each filters.exclude as filter}
-					<div class="bg-red-200 shadow shadow-red-200 rounded-xl border p-2">
+					<div class="bg-ctp-red text-ctp-base shadow shadow-ctp-red rounded-xl p-2">
 						{filter}
 					</div>
 				{/each}
@@ -69,14 +63,14 @@
 		</div>
 	</div>
 	<div class="flex gap-2">
-		<input type="checkbox" bind:checked={pickOrders} /> Show picked orders by Stravule
+		<input class="outline-none" type="checkbox" bind:checked={pickOrders} /> Show picked orders by Stravule
 	</div>
 	{#if orders && selected}
 		{#each orders as orderTable, orderTableIndex}
 			{#if orderTable}
-				<div class="bg-gray-200 shadow-md shadow-gray-200 rounded-xl border p-2">
+				<div class="bg-ctp-surface0 shadow shadow-ctp-surface0 rounded-xl p-3">
 					{#each orderTable as order, orderIndex}
-						<div class="flex flex-wrap flex-row gap-2">
+						<div class="flex flex-nowrap flex-row gap-2">
 							<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
 							<!-- <input type="radio" bind:group={sel} /> -->
 							{#if order.omezeni.endsWith('E')}
@@ -98,9 +92,9 @@
 									bind:checked={selected[orderTableIndex][orderIndex]}
 								/>
 							{:else}
-								<div class="ml-3"></div>
+								<div class="ml-[13px]"></div>
 							{/if}
-							<div class="flex flex-row">
+							<div class="flex flex-wrap flex-row break-all">
 								{order.id + 1}. {order.nazev}
 							</div>
 						</div>
@@ -109,4 +103,10 @@
 			{/if}
 		{/each}
 	{/if}
+	<button
+		class="bg-ctp-blue text-ctp-base border rounded-xl p-2 mb-2"
+		onclick={() => {
+			console.log(selected);
+		}}>print order list object to console</button
+	>
 </div>

@@ -5,18 +5,48 @@
 * {
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+  @apply text-ctp-text;
 }
 
 body {
   margin: 0;
   padding: 0;
-  @apply ml-10;
-  @apply mr-10;
+  @apply bg-ctp-base;
 }
+/**/
+/* @media(max-width: 500px) { */
+/*   body { */
+/*     @apply ml-3; */
+/*     @apply mr-3; */
+/*   } */
+/* } */
+/**/
+/* @media(min-width: 500px) { */
+/*   body { */
+/*     @apply ml-5; */
+/*     @apply mr-5; */
+/*   } */
+/* } */
+/**/
+/* @media(min-width: 768px) { */
+/*   body { */
+/*     @apply ml-20; */
+/*     @apply mr-20; */
+/*   } */
+/* } */
+/**/
+/* @media(min-width: 1024px) { */
+/*   body { */
+/*     @apply ml-40; */
+/*     @apply mr-40; */
+/*   } */
+/* } */
 
 .login-input {
   @apply p-2;
-  @apply border;
-  @apply border-gray-300;
+  @apply bg-ctp-mantle;
+  @apply shadow;
+  @apply shadow-ctp-mantle;
   @apply rounded;
 }
