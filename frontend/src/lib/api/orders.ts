@@ -20,11 +20,12 @@ export interface Order {
   casOdhlaseni: string,
 }
 // returns if logged in
-export async function loadOrders(sid: string, canteen: string): Promise<Order[][]> {
+export async function loadOrders(sid: string, canteen: string, pickOrders: boolean): Promise<Order[][]> {
   let params = new URLSearchParams()
 
   params.append("sid", sid)
   params.append("canteen", canteen)
+  params.append("pick", Boolean(pickOrders).toString())
   let req = await fetch(`http://127.0.0.1:1323/api/v1/orders?${params.toString()}`, {
     method: "POST",
   })

@@ -5,10 +5,9 @@
 
 	let orders: Order[][] | undefined = $state();
 	let selected: boolean[][] | undefined = $state();
+	let pickOrders: boolean = $state(false);
 
-	onMount(async () => {
-		orders = await loadOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
-
+	async function renderOrders(orders: Order[][]) {
 		selected = new Array(orders.length);
 		for (let i = 0; i < orders.length; i++) {
 			selected[i] = new Array(orders[i].length).fill(false);
@@ -17,6 +16,24 @@
 				selected[i][j] = orders[i][j].pocet == 1;
 			}
 		}
+	}
+
+	onMount(async () => {
+		orders = await loadOrders(
+			localStorage.getItem('sid')!,
+			localStorage.getItem('canteen')!,
+			pickOrders
+		);
+		renderOrders(orders);
+	});
+
+	$effect(() => {
+		loadOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!, pickOrders).then(
+			(ordersFetched) => {
+				orders = ordersFetched;
+				renderOrders(ordersFetched);
+			}
+		);
 	});
 </script>
 
@@ -27,6 +44,9 @@
 			console.log(selected);
 		}}>print order list object to console</button
 	>
+	<div class="flex gap-2">
+		<input type="checkbox" bind:checked={pickOrders} /> Pick orders
+	</div>
 	{#if orders && selected}
 		{#each orders as orderTable, orderTableIndex}
 			{#if orderTable}
