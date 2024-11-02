@@ -1,3 +1,5 @@
+import { PUBLIC_BACKEND_URL } from '$env/static/public';
+
 export interface Order {
   datum: string,
   druh: string,
@@ -26,7 +28,7 @@ export async function loadOrders(sid: string, canteen: string, pickOrders: boole
   params.append("sid", sid)
   params.append("canteen", canteen)
   params.append("pick", Boolean(pickOrders).toString())
-  let req = await fetch(`http://127.0.0.1:1323/api/v1/orders?${params.toString()}`, {
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/orders?${params.toString()}`, {
     method: "POST",
   })
 
