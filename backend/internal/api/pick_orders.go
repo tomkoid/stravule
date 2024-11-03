@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"strings"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
@@ -15,41 +16,56 @@ func PickOrders(sid string, canteen string) ([][]order, error) {
 
 	filterInclude, filterExclude := resolvers.GetFilters()
 
-	// compare orders by filters within each order table
+	// score and compare orders by filters within each order table
 	for i := range res {
-		somethingAlreadyRemoved := false
 		for j := range res[i] {
 			order := &res[i][j]
 
-			// if the previous thing was removed, set the amount of this to 1
-			if somethingAlreadyRemoved {
-				if order.Pocet == 0 {
-					order.Pocet = 1
-					somethingAlreadyRemoved = false // reset
-				}
+			if strings.HasSuffix(order.Omezeni, "B") {
+				continue
 			}
 
 			for _, filter := range filterInclude {
 				if strings.Contains(order.Nazev, filter) {
-					if j >= 1 && res[i][j-1].selectedByIncludeFilter {
-						order.Pocet = 0
-					} else {
-						order.Pocet = 1
-					}
-
-					if j >= 1 && res[i][j-1].Pocet == 1 && !res[i][j-1].selectedByIncludeFilter {
-						res[i][j-1].Pocet = 0
-					}
-
+					order.Score += 1
 					order.selectedByIncludeFilter = true
 				}
 			}
 
 			for _, filter := range filterExclude {
 				if strings.Contains(order.Nazev, filter) {
-					order.Pocet = 0
-					somethingAlreadyRemoved = true
+					order.Score -= 1
+					order.selectedByExcludeFilter = true
 				}
+			}
+
+			order.Nazev = fmt.Sprintf("%s (S: %d)", order.Nazev, order.Score)
+		}
+	}
+
+	for i := range res {
+		if len(res[i]) > 1 {
+			highestScoreIdx := 0
+
+			// rank
+			for j := 1; j < len(res[i]); j++ {
+				if res[i][j].Score > res[i][highestScoreIdx].Score {
+					highestScoreIdx = j
+				}
+			}
+
+			// set amount to 0 for all other orders
+			for j := 0; j < len(res[i]); j++ {
+				if j != highestScoreIdx {
+					res[i][j].Pocet = 0
+				}
+			}
+
+			// order the order if there is a positive score and it is the highest score in the orderTable
+			if res[i][highestScoreIdx].Score >= 0 {
+				res[i][highestScoreIdx].Pocet = 1
+			} else {
+				res[i][highestScoreIdx].Pocet = 0
 			}
 		}
 	}

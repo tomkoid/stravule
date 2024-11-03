@@ -45,6 +45,7 @@ type order struct {
 	CasKonec        string     `json:"casKonec"`
 	CasOdhlaseni    string     `json:"casOdhlaseni"`
 
+	Score                   int `json:"score"` // sort score
 	selectedByIncludeFilter bool
 	selectedByExcludeFilter bool
 }
