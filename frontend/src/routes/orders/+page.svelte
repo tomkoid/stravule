@@ -53,6 +53,8 @@
 						{filter}
 					</div>
 				{/each}
+			{:else}
+				<p>Načítání filtrů..</p>
 			{/if}
 		</div>
 		<div class="flex flex-wrap gap-2">
@@ -105,6 +107,8 @@
 				</div>
 			{/if}
 		{/each}
+	{:else}
+		<p>Načítání obědů..</p>
 	{/if}
 	<button
 		class="bg-ctp-blue text-ctp-base border rounded-xl p-2 mb-2"
