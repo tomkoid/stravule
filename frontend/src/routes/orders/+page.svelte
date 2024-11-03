@@ -4,11 +4,12 @@
 	import { loadFilters } from '$lib/api/filters';
 	import type { Order } from '$lib/api/orders';
 	import type { Filters } from '$lib/api/filters';
+	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
-	let selected: boolean[][] | undefined = $state();
-	let pickOrders: boolean = $state(false);
+	let selected: any | boolean[][] | undefined = $state();
+	let pickOrders: any = $state(false);
 
 	async function renderOrders(orders: Order[][]) {
 		selected = new Array(orders.length);
@@ -68,7 +69,11 @@
 		</div>
 	</div>
 	<div class="flex gap-2">
-		<input class="outline-none" type="checkbox" bind:checked={pickOrders} /> Show picked orders by Stravule
+		<Checkbox
+			className="size-[25px] rounded-md shadow shadow-ctp-mantle bg-ctp-surface0 data-[state=unchecked]:bg-ctp-surface0 data-[state=unchecked]:hover:bg-ctp-surface1 data-[state=checked]:hover:bg-ctp-mantle"
+			bind:checked={pickOrders}
+			label="Zobrazit vybrané obědy od Stravule"
+		/>
 	</div>
 	{#if orders && selected}
 		{#each orders as orderTable, orderTableIndex}
@@ -79,8 +84,8 @@
 							<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
 							<!-- <input type="radio" bind:group={sel} /> -->
 							{#if order.omezeni.endsWith('E')}
-								<input
-									type="checkbox"
+								<Checkbox
+									className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
 									onclick={() => {
 										if (selected) {
 											for (let item in selected[orderTableIndex]) {
@@ -97,7 +102,7 @@
 									bind:checked={selected[orderTableIndex][orderIndex]}
 								/>
 							{:else}
-								<div class="ml-[13px]"></div>
+								<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
 							{/if}
 							<div class="flex flex-wrap flex-row break-all">
 								{order.id + 1}. {order.nazev}
