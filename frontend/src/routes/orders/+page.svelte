@@ -21,6 +21,7 @@
 		}
 	}
 
+	let mountOrdersLoaded = $state(false);
 	onMount(async () => {
 		orders = await loadOrders(
 			localStorage.getItem('sid')!,
@@ -29,9 +30,11 @@
 		);
 		filters = await loadFilters(localStorage.getItem('sid')!, localStorage.getItem('canteen')!)!;
 		renderOrders(orders);
+		mountOrdersLoaded = true;
 	});
 
 	$effect(() => {
+		if (!mountOrdersLoaded) return;
 		loadOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!, pickOrders).then(
 			(ordersFetched) => {
 				orders = ordersFetched;

@@ -1,4 +1,5 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
+import { pageLoading } from '$lib/stores/page.svelte';
 
 export interface Order {
   datum: string,
@@ -23,6 +24,8 @@ export interface Order {
 }
 // returns if logged in
 export async function loadOrders(sid: string, canteen: string, pickOrders: boolean): Promise<Order[][]> {
+  pageLoading.value = true;
+
   let params = new URLSearchParams()
 
   params.append("sid", sid)
@@ -37,6 +40,8 @@ export async function loadOrders(sid: string, canteen: string, pickOrders: boole
   }
 
   let data: Order[][] = await req.json()
+
+  pageLoading.value = false;
 
   return data
 }
