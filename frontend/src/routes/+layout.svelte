@@ -3,14 +3,21 @@
 	import { onMount } from 'svelte';
 
 	import '../app.css';
+	import { navigating } from '$app/stores';
 	let { children } = $props();
 
 	let loggedIn: boolean = $state(false);
 
-	onMount(async () => {
-		if (localStorage) {
-			localStorage.getItem('sid') ? (loggedIn = true) : null;
-		}
+	function refreshLoginStatus() {
+		localStorage.getItem('sid') ? (loggedIn = true) : (loggedIn = false);
+	}
+
+	onMount(() => {
+		if (localStorage) refreshLoginStatus();
+	});
+
+	$effect(() => {
+		if ($navigating) refreshLoginStatus();
 	});
 </script>
 
