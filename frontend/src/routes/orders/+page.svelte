@@ -5,6 +5,8 @@
 	import type { Order } from '$lib/api/orders';
 	import type { Filters } from '$lib/api/filters';
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
+	import { Collapsible } from 'bits-ui';
+	import * as FiltersList from '$lib/components/orders/filters/index';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
@@ -46,28 +48,13 @@
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
-	<div class="flex flex-wrap flex-row md:justify-between gap-2">
-		<div class="flex flex-wrap gap-2">
-			{#if filters}
-				{#each filters.include as filter}
-					<div class="bg-ctp-green text-ctp-base shadow shadow-ctp-green rounded-xl p-2">
-						{filter}
-					</div>
-				{/each}
-			{:else}
-				<p>Načítání filtrů..</p>
-			{/if}
-		</div>
-		<div class="flex flex-wrap gap-2">
-			{#if filters}
-				{#each filters.exclude as filter}
-					<div class="bg-ctp-red text-ctp-base shadow shadow-ctp-red rounded-xl p-2">
-						{filter}
-					</div>
-				{/each}
-			{/if}
-		</div>
-	</div>
+	<Collapsible.Root>
+		<Collapsible.Trigger>> Filterování</Collapsible.Trigger>
+		<Collapsible.Content>
+			<FiltersList.Root {filters} />
+		</Collapsible.Content>
+	</Collapsible.Root>
+
 	<div class="flex gap-2">
 		<Checkbox
 			className="size-[25px] rounded-md shadow shadow-ctp-mantle bg-ctp-surface0 data-[state=unchecked]:bg-ctp-surface0 data-[state=unchecked]:hover:bg-ctp-surface1 data-[state=checked]:hover:bg-ctp-mantle"
