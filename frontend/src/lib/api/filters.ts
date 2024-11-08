@@ -12,7 +12,7 @@ export async function loadFilters(sid: string, canteen: string): Promise<Filters
   params.append("sid", sid)
   params.append("canteen", canteen)
   let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
-    method: "POST",
+    method: "GET",
   })
 
   if (req.status != 200) {
