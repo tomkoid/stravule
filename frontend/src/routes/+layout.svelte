@@ -47,7 +47,7 @@
 		<button
 			class="hover:text-ctp-blue transition flex items-center gap-2"
 			onclick={() => {
-				localStorage.clear();
+				localStorage.removeItem('sid');
 				goto('/');
 			}}
 		>
