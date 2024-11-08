@@ -122,3 +122,7 @@
 		}}>print order list object to console</button
 	>
 </div>
+
+<svelte:head>
+	<title>Stravule - Objednávky</title>
+</svelte:head>

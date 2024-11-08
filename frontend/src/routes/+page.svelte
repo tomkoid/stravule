@@ -48,3 +48,7 @@
 	>
 	<p class="text-ctp-red">{errorMessage}</p>
 </div>
+
+<svelte:head>
+	<title>Stravule - Přihlášení</title>
+</svelte:head>
