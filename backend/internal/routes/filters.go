@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Filters(c echo.Context) error {
+func ListFilters(c echo.Context) error {
 	sid := c.QueryParam("sid")
 	canteen := c.QueryParam("canteen")
 
@@ -15,7 +15,7 @@ func Filters(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Missing `sid` or `canteen` query parameter")
 	}
 
-	filterInclude, filterExclude := resolvers.GetFilters()
+	filters := resolvers.GetFilters(sid, canteen)
 
-	return c.JSON(http.StatusOK, map[string][]string{"include": filterInclude, "exclude": filterExclude})
+	return c.JSON(http.StatusOK, filters)
 }
