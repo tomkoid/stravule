@@ -32,7 +32,7 @@ export async function loadOrders(sid: string, canteen: string, pickOrders: boole
   params.append("canteen", canteen)
   params.append("pick", Boolean(pickOrders).toString())
   let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/orders?${params.toString()}`, {
-    method: "POST",
+    method: "GET",
   })
 
   if (req.status != 200) {

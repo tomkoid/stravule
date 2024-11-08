@@ -14,7 +14,7 @@ func PickOrders(sid string, canteen string) ([][]order, error) {
 		return nil, err
 	}
 
-	filterInclude, filterExclude := resolvers.GetFilters()
+	filters := resolvers.GetFilters(&sid, &canteen)
 
 	// score and compare orders by filters within each order table
 	for i := range res {
@@ -25,14 +25,14 @@ func PickOrders(sid string, canteen string) ([][]order, error) {
 				continue
 			}
 
-			for _, filter := range filterInclude {
+			for _, filter := range filters.Include {
 				if strings.Contains(order.Nazev, filter) {
 					order.Score += 1
 					order.selectedByIncludeFilter = true
 				}
 			}
 
-			for _, filter := range filterExclude {
+			for _, filter := range filters.Exclude {
 				if strings.Contains(order.Nazev, filter) {
 					order.Score -= 1
 					order.selectedByExcludeFilter = true
