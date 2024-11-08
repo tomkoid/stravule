@@ -57,24 +57,21 @@ func AddFilter(sid string, canteen string, filter Filter) (*Filters, error) {
 func RemoveFilter(sid string, canteen string, filter Filter) (*Filters, error) {
 	removed := false
 
-	if filter.Category == "include" {
-		for i := 0; i < len(filtersGlob.Include); i++ {
-			if filtersGlob.Include[i] == filter.Value {
-				filtersGlob.Include = append(filtersGlob.Include[:i], filtersGlob.Include[i+1:]...)
-			}
+	for i := 0; i < len(filtersGlob.Include); i++ {
+		if filtersGlob.Include[i] == filter.Value {
+			filtersGlob.Include = append(filtersGlob.Include[:i], filtersGlob.Include[i+1:]...)
+			removed = true
 		}
-	} else if filter.Category == "exclude" {
-		for i := 0; i < len(filtersGlob.Exclude); i++ {
-			if filtersGlob.Exclude[i] == filter.Value {
-				filtersGlob.Exclude = append(filtersGlob.Exclude[:i], filtersGlob.Exclude[i+1:]...)
-			}
+	}
+	for i := 0; i < len(filtersGlob.Exclude); i++ {
+		if filtersGlob.Exclude[i] == filter.Value {
+			filtersGlob.Exclude = append(filtersGlob.Exclude[:i], filtersGlob.Exclude[i+1:]...)
+			removed = true
 		}
-	} else {
-		return nil, errors.New("invalid filter category")
 	}
 
 	if !removed {
-		return nil, errors.New("filter not found")
+		return nil, errors.New("filter not found anywhere")
 	}
 
 	finalFilters := GetFilters(&sid, &canteen)
