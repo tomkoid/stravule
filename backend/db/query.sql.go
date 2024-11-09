@@ -7,37 +7,59 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
+
+const addFilter = `-- name: AddFilter :exec
+INSERT INTO filters (user_id, filter_text, category)
+VALUES (
+  (SELECT id FROM users WHERE user_hash = $1),
+  $2,
+  $3
+)
+`
+
+type AddFilterParams struct {
+	UserHash   string
+	FilterText string
+	Category   pgtype.Text
+}
+
+func (q *Queries) AddFilter(ctx context.Context, arg AddFilterParams) error {
+	_, err := q.db.Exec(ctx, addFilter, arg.UserHash, arg.FilterText, arg.Category)
+	return err
+}
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    userHash, sid
+    user_hash, sid
 ) VALUES (
     $1, $2
 )
-RETURNING id, userhash, sid
+RETURNING id, user_hash, sid
 `
 
 type CreateUserParams struct {
-	Userhash string
+	UserHash string
 	Sid      string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.Userhash, arg.Sid)
+	row := q.db.QueryRow(ctx, createUser, arg.UserHash, arg.Sid)
 	var i User
-	err := row.Scan(&i.ID, &i.Userhash, &i.Sid)
+	err := row.Scan(&i.ID, &i.UserHash, &i.Sid)
 	return i, err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, userhash, sid FROM users
-WHERE userHash = $1 LIMIT 1
+SELECT id, user_hash, sid FROM users
+WHERE user_hash = $1 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, userhash string) (User, error) {
-	row := q.db.QueryRow(ctx, getUser, userhash)
+func (q *Queries) GetUser(ctx context.Context, userHash string) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, userHash)
 	var i User
-	err := row.Scan(&i.ID, &i.Userhash, &i.Sid)
+	err := row.Scan(&i.ID, &i.UserHash, &i.Sid)
 	return i, err
 }

@@ -4,8 +4,20 @@
 
 package db
 
+import (
+	"github.com/jackc/pgx/v5/pgtype"
+)
+
+type Filter struct {
+	ID         int32
+	UserID     int32
+	FilterText string
+	Category   pgtype.Text
+	CreatedAt  pgtype.Timestamp
+}
+
 type User struct {
 	ID       int32
-	Userhash string
+	UserHash string
 	Sid      string
 }

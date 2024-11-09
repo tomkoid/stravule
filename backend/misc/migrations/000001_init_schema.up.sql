@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
   -- id BIGSERIAL PRIMARY KEY,
   id serial NOT NULL PRIMARY KEY,
-  userHash text NOT NULL,
+  user_hash text NOT NULL,
   sid text NOT NULL
 );
 

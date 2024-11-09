@@ -114,7 +114,7 @@ func Login(username string, password string, canteen string) (string, string, er
 	_, err = database.DB.GetUser(ctx, userHash)
 	if err != nil {
 		_, err = database.DB.CreateUser(ctx, db.CreateUserParams{
-			Userhash: userHash,
+			UserHash: userHash,
 			Sid:      response.SID,
 		})
 		if err != nil {
