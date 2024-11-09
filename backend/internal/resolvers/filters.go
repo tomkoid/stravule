@@ -25,11 +25,11 @@ var filtersGlob = Filters{Include: []string{
 },
 }
 
-func GetFilters(sid *string, canteen *string) Filters {
+func GetFilters(userHash *string) Filters {
 	return filtersGlob
 }
 
-func AddFilter(sid string, canteen string, filter Filter) (*Filters, error) {
+func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 	// if filter already exists, do nothing
 	for _, f := range filtersGlob.Include {
 		if f == filter.Value {
@@ -50,11 +50,11 @@ func AddFilter(sid string, canteen string, filter Filter) (*Filters, error) {
 		return nil, errors.New("invalid filter category")
 	}
 
-	finalFilters := GetFilters(&sid, &canteen)
+	finalFilters := GetFilters(userHash)
 	return &finalFilters, nil
 }
 
-func RemoveFilter(sid string, canteen string, filter Filter) (*Filters, error) {
+func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	removed := false
 
 	for i := 0; i < len(filtersGlob.Include); i++ {
@@ -74,6 +74,6 @@ func RemoveFilter(sid string, canteen string, filter Filter) (*Filters, error) {
 		return nil, errors.New("filter not found anywhere")
 	}
 
-	finalFilters := GetFilters(&sid, &canteen)
+	finalFilters := GetFilters(userHash)
 	return &finalFilters, nil
 }

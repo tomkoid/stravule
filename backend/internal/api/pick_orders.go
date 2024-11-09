@@ -8,13 +8,13 @@ import (
 )
 
 // returns a list of orders, used filters and possibly an error
-func PickOrders(sid string, canteen string) ([][]order, error) {
+func PickOrders(sid string, canteen string, userHash string) ([][]order, error) {
 	res, err := Orders(sid, canteen)
 	if err != nil {
 		return nil, err
 	}
 
-	filters := resolvers.GetFilters(&sid, &canteen)
+	filters := resolvers.GetFilters(&userHash)
 
 	// score and compare orders by filters within each order table
 	for i := range res {
