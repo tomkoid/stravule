@@ -30,14 +30,14 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 			}
 
 			for _, filter := range filters.Include {
-				if strings.Contains(order.Nazev, filter) {
+				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter)) {
 					order.Score += 1
 					order.selectedByIncludeFilter = true
 				}
 			}
 
 			for _, filter := range filters.Exclude {
-				if strings.Contains(order.Nazev, filter) {
+				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter)) {
 					order.Score -= 1
 					order.selectedByExcludeFilter = true
 				}
