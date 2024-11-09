@@ -30,6 +30,7 @@ export async function loadOrders(sid: string, canteen: string, pickOrders: boole
 
   params.append("sid", sid)
   params.append("canteen", canteen)
+  params.append("user_hash", localStorage.getItem("user_hash")!)
   params.append("pick", Boolean(pickOrders).toString())
   let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/orders?${params.toString()}`, {
     method: "GET",

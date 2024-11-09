@@ -1,0 +1,14 @@
+volumes:
+  db_data:
+
+services:
+  db:
+    image: postgres:17
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=ultrasecurepassword
+      - POSTGRES_USER=stravule
+      - POSTGRES_DB=stravule

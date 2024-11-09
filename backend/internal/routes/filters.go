@@ -8,24 +8,25 @@ import (
 )
 
 func ListFilters(c echo.Context) error {
-	sid := c.QueryParam("sid")
-	canteen := c.QueryParam("canteen")
+	userHash := c.QueryParam("user_hash")
 
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing `sid` or `canteen` query parameter")
+	if userHash == "" {
+		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
 	}
 
-	filters := resolvers.GetFilters(&sid, &canteen)
+	filters, err := resolvers.GetFilters(&userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 
 	return c.JSON(http.StatusOK, filters)
 }
 
 func AddFilter(c echo.Context) error {
-	sid := c.QueryParam("sid")
-	canteen := c.QueryParam("canteen")
+	userHash := c.QueryParam("user_hash")
 
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing `sid` or `canteen` query parameter")
+	if userHash == "" {
+		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
 	}
 
 	filter := resolvers.Filter{}
@@ -33,7 +34,7 @@ func AddFilter(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	filters, err := resolvers.AddFilter(sid, canteen, filter)
+	filters, err := resolvers.AddFilter(&userHash, filter)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -42,11 +43,10 @@ func AddFilter(c echo.Context) error {
 }
 
 func RemoveFilter(c echo.Context) error {
-	sid := c.QueryParam("sid")
-	canteen := c.QueryParam("canteen")
+	userHash := c.QueryParam("user_hash")
 
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing `sid` or `canteen` query parameter")
+	if userHash == "" {
+		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
 	}
 
 	filter := resolvers.Filter{}
@@ -54,7 +54,7 @@ func RemoveFilter(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	filters, err := resolvers.RemoveFilter(sid, canteen, filter)
+	filters, err := resolvers.RemoveFilter(&userHash, filter)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}

@@ -16,9 +16,10 @@ func Login(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Missing parameters")
 	}
 
-	sid, canteen, err := api.Login(username, password, canteenParam)
+	loginData, err := api.Login(username, password, canteenParam)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusOK, map[string]string{"sid": sid, "canteen": canteen})
+
+	return c.JSON(http.StatusOK, loginData)
 }

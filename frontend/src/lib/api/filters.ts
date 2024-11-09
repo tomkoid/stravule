@@ -6,11 +6,10 @@ export interface Filters {
 }
 
 // returns all filters for the current user 
-export async function loadFilters(sid: string, canteen: string): Promise<Filters> {
+export async function loadFilters(): Promise<Filters> {
   let params = new URLSearchParams()
 
-  params.append("sid", sid)
-  params.append("canteen", canteen)
+  params.append("user_hash", localStorage.getItem("user_hash")!)
   let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
     method: "GET",
   })
@@ -24,11 +23,10 @@ export async function loadFilters(sid: string, canteen: string): Promise<Filters
   return data
 }
 
-export async function removeFilter(sid: string, canteen: string, filterString: string) {
+export async function removeFilter(filterString: string) {
   let params = new URLSearchParams()
 
-  params.append("sid", sid)
-  params.append("canteen", canteen)
+  params.append("user_hash", localStorage.getItem("user_hash")!)
   let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
     method: "DELETE",
     headers: {

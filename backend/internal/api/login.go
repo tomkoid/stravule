@@ -2,10 +2,16 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+
+	"codeberg.org/tomkoid/stravule/backend/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/database"
+	"codeberg.org/tomkoid/stravule/backend/internal/utils"
 )
 
 type User struct {
@@ -52,8 +58,14 @@ type LoginRequest struct {
 	Lang            string `json:"lang"`
 }
 
+type LoginReturn struct {
+	SID      string `json:"sid"`
+	Canteen  string `json:"canteen"`
+	UserHash string `json:"user_hash"`
+}
+
 // Returns SID and the canteen number
-func Login(username string, password string, canteen string) (string, string, error) {
+func Login(username string, password string, canteen string) (*LoginReturn, error) {
 	requestBody := LoginRequest{
 		Cislo:           canteen,
 		Jmeno:           username,
@@ -65,12 +77,12 @@ func Login(username string, password string, canteen string) (string, string, er
 
 	requestBodyJson, err := json.Marshal(requestBody)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
 	r, err := http.NewRequest("POST", "https://app.strava.cz/api/login", bytes.NewBuffer(requestBodyJson))
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
 	r.Header.Set("accept", "*/*")
@@ -84,22 +96,45 @@ func Login(username string, password string, canteen string) (string, string, er
 
 	res, err := client.Do(r)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
 	if res.StatusCode == 555 {
-		return "", "", errors.New("Wrong credentials, try again with the right credentials")
+		return nil, errors.New("Wrong credentials, try again with the right credentials")
 	}
 
 	if res.StatusCode != 200 {
-		return "", "", errors.New(fmt.Sprintf("Status code: %d", res.StatusCode))
+		return nil, errors.New(fmt.Sprintf("Status code: %d", res.StatusCode))
 	}
 
 	response := LoginResponse{}
 	derr := json.NewDecoder(res.Body).Decode(&response)
 	if derr != nil {
-		return "", "", derr
+		return nil, derr
 	}
 
-	return response.SID, response.Cislo, nil
+	ctx := context.Background()
+	userHash := utils.GetUserHash(username, password, canteen)
+
+	// insert new user into db if it doesn't exist
+	_, err = database.DB.GetUser(ctx, userHash)
+	if err != nil {
+		_, err = database.DB.CreateUser(ctx, db.CreateUserParams{
+			UserHash: userHash,
+			Sid:      response.SID,
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println("db: created new user with hash", userHash)
+		}
+	}
+
+	data := LoginReturn{
+		SID:      response.SID,
+		Canteen:  response.Cislo,
+		UserHash: userHash,
+	}
+
+	return &data, nil
 }

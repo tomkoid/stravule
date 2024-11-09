@@ -1,6 +1,13 @@
 package resolvers
 
-import "errors"
+import (
+	"context"
+	"errors"
+
+	"codeberg.org/tomkoid/stravule/backend/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/database"
+	"github.com/jackc/pgx/v5/pgtype"
+)
 
 type Filter struct {
 	Category string `json:"category"`
@@ -25,47 +32,105 @@ var filtersGlob = Filters{Include: []string{
 },
 }
 
-func GetFilters(sid *string, canteen *string) Filters {
-	return filtersGlob
+func GetFilters(userHash *string) (*Filters, error) {
+	dbFilters, err := database.DB.ListFilters(context.Background(), *userHash)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var filters Filters = Filters{Include: []string{}, Exclude: []string{}}
+
+	for _, filter := range dbFilters {
+		if filter.Category.String == "include" {
+			filters.Include = append(filters.Include, filter.FilterText)
+		} else if filter.Category.String == "exclude" {
+			filters.Exclude = append(filters.Exclude, filter.FilterText)
+		}
+	}
+
+	return &filters, nil
 }
 
-func AddFilter(sid string, canteen string, filter Filter) (*Filters, error) {
+func AddFilter(userHash *string, filter Filter) (*Filters, error) {
+	finalFilters, err := GetFilters(userHash)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// if filter already exists, do nothing
-	for _, f := range filtersGlob.Include {
+	for _, f := range finalFilters.Include {
 		if f == filter.Value {
 			return nil, errors.New("filter already exists in includeFilters, please remove it first")
 		}
 	}
-	for _, f := range filtersGlob.Exclude {
+	for _, f := range finalFilters.Exclude {
 		if f == filter.Value {
 			return nil, errors.New("filter already exists in excludeFilters, please remove it first")
 		}
 	}
 
 	if filter.Category == "include" {
-		filtersGlob.Include = append(filtersGlob.Include, filter.Value)
+		database.DB.AddFilter(context.Background(), db.AddFilterParams{
+			FilterText: filter.Value,
+			Category: pgtype.Text{
+				String: "include",
+				Valid:  true,
+			},
+			UserHash: *userHash,
+		})
+		finalFilters.Include = append(finalFilters.Include, filter.Value)
 	} else if filter.Category == "exclude" {
-		filtersGlob.Exclude = append(filtersGlob.Exclude, filter.Value)
+		database.DB.AddFilter(context.Background(), db.AddFilterParams{
+			FilterText: filter.Value,
+			Category: pgtype.Text{
+				String: "exclude",
+				Valid:  true,
+			},
+			UserHash: *userHash,
+		})
+		finalFilters.Exclude = append(finalFilters.Exclude, filter.Value)
 	} else {
 		return nil, errors.New("invalid filter category")
 	}
 
-	finalFilters := GetFilters(&sid, &canteen)
-	return &finalFilters, nil
+	return finalFilters, nil
 }
 
-func RemoveFilter(sid string, canteen string, filter Filter) (*Filters, error) {
+func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	removed := false
+	finalFilters, err := GetFilters(userHash)
 
-	for i := 0; i < len(filtersGlob.Include); i++ {
-		if filtersGlob.Include[i] == filter.Value {
-			filtersGlob.Include = append(filtersGlob.Include[:i], filtersGlob.Include[i+1:]...)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(finalFilters.Include); i++ {
+		if finalFilters.Include[i] == filter.Value {
+			database.DB.DeleteFilter(context.Background(), db.DeleteFilterParams{
+				FilterText: filter.Value,
+				Category: pgtype.Text{
+					String: "include",
+					Valid:  true,
+				},
+				UserHash: *userHash,
+			})
+			finalFilters.Include = append(finalFilters.Include[:i], finalFilters.Include[i+1:]...)
 			removed = true
 		}
 	}
-	for i := 0; i < len(filtersGlob.Exclude); i++ {
-		if filtersGlob.Exclude[i] == filter.Value {
-			filtersGlob.Exclude = append(filtersGlob.Exclude[:i], filtersGlob.Exclude[i+1:]...)
+	for i := 0; i < len(finalFilters.Exclude); i++ {
+		if finalFilters.Exclude[i] == filter.Value {
+			database.DB.DeleteFilter(context.Background(), db.DeleteFilterParams{
+				FilterText: filter.Value,
+				Category: pgtype.Text{
+					String: "exclude",
+					Valid:  true,
+				},
+				UserHash: *userHash,
+			})
+			finalFilters.Exclude = append(finalFilters.Exclude[:i], finalFilters.Exclude[i+1:]...)
 			removed = true
 		}
 	}
@@ -74,6 +139,5 @@ func RemoveFilter(sid string, canteen string, filter Filter) (*Filters, error) {
 		return nil, errors.New("filter not found anywhere")
 	}
 
-	finalFilters := GetFilters(&sid, &canteen)
-	return &finalFilters, nil
+	return finalFilters, nil
 }

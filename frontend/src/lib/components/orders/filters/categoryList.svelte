@@ -20,7 +20,7 @@
 					console.error('sid not found in localStorage while removing filter');
 				if (!localStorage.getItem('canteen'))
 					console.error('canteen not found in localStorage while removing filter');
-				removeFilter(localStorage.getItem('sid')!, localStorage.getItem('canteen')!, filter);
+				removeFilter(filter);
 			}}>X</button
 		>
 		<p>{filter}</p>
