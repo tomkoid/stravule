@@ -20,5 +20,6 @@ func Login(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+
 	return c.JSON(http.StatusOK, map[string]string{"sid": sid, "canteen": canteen})
 }

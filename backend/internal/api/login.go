@@ -2,10 +2,16 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+
+	"codeberg.org/tomkoid/stravule/backend/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/database"
+	"codeberg.org/tomkoid/stravule/backend/internal/utils"
 )
 
 type User struct {
@@ -99,6 +105,23 @@ func Login(username string, password string, canteen string) (string, string, er
 	derr := json.NewDecoder(res.Body).Decode(&response)
 	if derr != nil {
 		return "", "", derr
+	}
+
+	ctx := context.Background()
+	userHash := utils.GetUserHash(username, password, canteen)
+
+	// insert new user into db if it doesn't exist
+	_, err = database.DB.GetUser(ctx, userHash)
+	if err != nil {
+		_, err = database.DB.CreateUser(ctx, db.CreateUserParams{
+			Userhash: userHash,
+			Sid:      response.SID,
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println("db: created new user with hash", userHash)
+		}
 	}
 
 	return response.SID, response.Cislo, nil

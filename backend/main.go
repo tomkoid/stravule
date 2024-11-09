@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"codeberg.org/tomkoid/stravule/backend/internal/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/database"
 	"codeberg.org/tomkoid/stravule/backend/internal/server"
 	"github.com/joho/godotenv"
 )
@@ -14,7 +14,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	err = db.InitDB()
+	err = database.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}

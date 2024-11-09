@@ -105,7 +105,7 @@
 	<button
 		class="bg-ctp-blue text-ctp-base border rounded-xl p-2 mb-2"
 		onclick={() => {
-			console.log(selected);
+			console.log($state.snapshot(selected));
 		}}>print order list object to console</button
 	>
 </div>
