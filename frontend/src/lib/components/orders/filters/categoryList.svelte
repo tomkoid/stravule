@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { removeFilter } from '$lib/api/filters';
+	import Icon from '@iconify/svelte';
 
 	interface FiltersProps {
 		filters?: string[];
@@ -11,6 +12,7 @@
 {#each filters! as filter}
 	<div class="flex flex-row items-center gap-2">
 		<button
+			class="transition rounded-xl hover:bg-ctp-surface1"
 			onclick={() => {
 				if (!filters) console.error('filters is undefined while removing a filter');
 				filters = filters!.filter((f) => f != filter);
@@ -21,8 +23,10 @@
 				if (!localStorage.getItem('canteen'))
 					console.error('canteen not found in localStorage while removing filter');
 				removeFilter(filter);
-			}}>X</button
+			}}
 		>
+			<Icon icon="material-symbols:close" />
+		</button>
 		<p>{filter}</p>
 	</div>
 {/each}

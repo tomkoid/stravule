@@ -40,12 +40,12 @@
 </div>
 
 <div
-	class="flex md:flex-row flex-col bg-ctp-mantle bg-opacity-75 backdrop-blur-sm shadow shadow-ctp-mantle justify-center md:justify-between items-center gap-6 md:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-20 md:px-10 lg:px-20 xl:px-40"
+	class="flex md:flex-row flex-col bg-ctp-crust bg-opacity-75 backdrop-blur-sm shadow shadow-ctp-crust justify-center md:justify-between items-center gap-6 md:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-20 md:px-10 lg:px-20 xl:px-40"
 >
 	<p class="font-bold text-2xl">Stravule</p>
 	{#if loggedIn}
 		<button
-			class="hover:text-ctp-blue transition flex items-center gap-2"
+			class="hover:text-ctp-blue transition flex items-center justify-center text-center gap-2"
 			onclick={() => {
 				localStorage.removeItem('sid');
 				goto('/');

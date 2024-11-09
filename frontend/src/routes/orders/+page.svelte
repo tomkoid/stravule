@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+
 	import { loadOrders } from '$lib/api/orders';
 	import { loadFilters } from '$lib/api/filters';
 	import type { Order } from '$lib/api/orders';
@@ -7,6 +8,8 @@
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 	import { Collapsible } from 'bits-ui';
 	import * as FiltersList from '$lib/components/orders/filters/index';
+	import { fly, slide } from 'svelte/transition';
+	import { quadInOut } from 'svelte/easing';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
@@ -31,7 +34,7 @@
 			localStorage.getItem('canteen')!,
 			pickOrders
 		);
-		filters = await loadFilters(localStorage.getItem('sid')!, localStorage.getItem('canteen')!)!;
+		filters = await loadFilters();
 		renderOrders(orders);
 		mountOrdersLoaded = true;
 	});
@@ -49,8 +52,8 @@
 
 <div class="flex flex-col flex-nowrap gap-3">
 	<Collapsible.Root>
-		<Collapsible.Trigger>> Filterování</Collapsible.Trigger>
-		<Collapsible.Content>
+		<Collapsible.Trigger>> Filtry</Collapsible.Trigger>
+		<Collapsible.Content class="mt-2" transition={slide}>
 			<FiltersList.Root {filters} />
 		</Collapsible.Content>
 	</Collapsible.Root>
@@ -63,42 +66,48 @@
 		/>
 	</div>
 	{#if orders && selected}
-		{#each orders as orderTable, orderTableIndex}
-			{#if orderTable}
-				<div class="bg-ctp-surface0 shadow shadow-ctp-surface0 rounded-xl p-3">
-					{#each orderTable as order, orderIndex}
-						<div class="flex flex-nowrap flex-row gap-2">
-							<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
-							<!-- <input type="radio" bind:group={sel} /> -->
-							{#if order.omezeni.endsWith('E')}
-								<Checkbox
-									className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
-									onclick={() => {
-										if (selected) {
-											for (let item in selected[orderTableIndex]) {
-												if (
-													selected[orderTableIndex][item] != selected[orderTableIndex][orderIndex]
-												) {
-													selected[orderTableIndex][item] = false;
+		<div
+			in:fly={{ y: 200, delay: 0, easing: quadInOut }}
+			out:fly={{ x: 200, duration: 300 }}
+			class="flex flex-col flex-nowrap gap-3"
+		>
+			{#each orders as orderTable, orderTableIndex}
+				{#if orderTable}
+					<div class="bg-ctp-surface0 shadow shadow-ctp-surface0 rounded-xl p-3">
+						{#each orderTable as order, orderIndex}
+							<div class="flex flex-nowrap flex-row gap-2">
+								<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
+								<!-- <input type="radio" bind:group={sel} /> -->
+								{#if order.omezeni.endsWith('E')}
+									<Checkbox
+										className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
+										onclick={() => {
+											if (selected) {
+												for (let item in selected[orderTableIndex]) {
+													if (
+														selected[orderTableIndex][item] != selected[orderTableIndex][orderIndex]
+													) {
+														selected[orderTableIndex][item] = false;
+													}
 												}
+											} else {
+												console.log('something really bad happened');
 											}
-										} else {
-											console.log('something really bad happened');
-										}
-									}}
-									bind:checked={selected[orderTableIndex][orderIndex]}
-								/>
-							{:else}
-								<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
-							{/if}
-							<div class="flex flex-wrap flex-row break-all">
-								{order.id + 1}. {order.nazev}
+										}}
+										bind:checked={selected[orderTableIndex][orderIndex]}
+									/>
+								{:else}
+									<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
+								{/if}
+								<div class="flex flex-wrap flex-row break-all">
+									{order.id + 1}. {order.nazev}
+								</div>
 							</div>
-						</div>
-					{/each}
-				</div>
-			{/if}
-		{/each}
+						{/each}
+					</div>
+				{/if}
+			{/each}
+		</div>
 	{:else}
 		<p>Načítání obědů..</p>
 	{/if}

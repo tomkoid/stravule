@@ -10,14 +10,13 @@
 </script>
 
 {#if filters}
-	<div class="flex flex-col gap-3 bg-ctp-surface1 p-3 rounded-xl">
-		<p class="font-bold">Pozitivni</p>
-		<div class="bg-ctp-surface2">
+	<div class="flex flex-col gap-1 bg-ctp-surface1 p-3 rounded-xl">
+		<p class="font-bold">Chci</p>
+		<div class="bg-ctp-surface2 rounded-xl p-2">
 			<CategoryList bind:filters={filters.include} />
 		</div>
-		<hr class="border-ctp-mantle" />
-		<p class="font-bold">Negativni</p>
-		<div class="bg-ctp-surface2">
+		<p class="font-bold">Nechci</p>
+		<div class="bg-ctp-surface2 rounded-xl p-2">
 			<CategoryList bind:filters={filters.exclude} />
 		</div>
 	</div>
