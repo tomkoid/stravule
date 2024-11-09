@@ -10,6 +10,10 @@ INSERT INTO users (
 )
 RETURNING *;
 
+-- name: ListFilters :many
+SELECT * FROM filters
+WHERE (SELECT id FROM users WHERE user_hash = $1) = user_id;
+
 -- name: AddFilter :exec
 INSERT INTO filters (user_id, filter_text, category)
 VALUES (
@@ -17,3 +21,9 @@ VALUES (
   $2,
   $3
 );
+
+-- name: DeleteFilter :exec
+DELETE FROM filters
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $2
+  AND category = $3;

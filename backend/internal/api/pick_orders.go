@@ -14,7 +14,11 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 		return nil, err
 	}
 
-	filters := resolvers.GetFilters(&userHash)
+	filters, err := resolvers.GetFilters(&userHash)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// score and compare orders by filters within each order table
 	for i := range res {

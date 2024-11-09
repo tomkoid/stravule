@@ -14,7 +14,10 @@ func ListFilters(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
 	}
 
-	filters := resolvers.GetFilters(&userHash)
+	filters, err := resolvers.GetFilters(&userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 
 	return c.JSON(http.StatusOK, filters)
 }

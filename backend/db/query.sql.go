@@ -52,6 +52,24 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const deleteFilter = `-- name: DeleteFilter :exec
+DELETE FROM filters
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $2
+  AND category = $3
+`
+
+type DeleteFilterParams struct {
+	UserHash   string
+	FilterText string
+	Category   pgtype.Text
+}
+
+func (q *Queries) DeleteFilter(ctx context.Context, arg DeleteFilterParams) error {
+	_, err := q.db.Exec(ctx, deleteFilter, arg.UserHash, arg.FilterText, arg.Category)
+	return err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT id, user_hash, sid FROM users
 WHERE user_hash = $1 LIMIT 1
@@ -62,4 +80,35 @@ func (q *Queries) GetUser(ctx context.Context, userHash string) (User, error) {
 	var i User
 	err := row.Scan(&i.ID, &i.UserHash, &i.Sid)
 	return i, err
+}
+
+const listFilters = `-- name: ListFilters :many
+SELECT id, user_id, filter_text, category, created_at FROM filters
+WHERE (SELECT id FROM users WHERE user_hash = $1) = user_id
+`
+
+func (q *Queries) ListFilters(ctx context.Context, userHash string) ([]Filter, error) {
+	rows, err := q.db.Query(ctx, listFilters, userHash)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Filter
+	for rows.Next() {
+		var i Filter
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.FilterText,
+			&i.Category,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
