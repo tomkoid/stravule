@@ -10,9 +10,10 @@
 </script>
 
 {#each filters! as filter}
-	<div class="flex flex-row items-center gap-2">
+	<div class="flex flex-row items-center gap-1">
+		<p class="text text-sm">{filter}</p>
 		<button
-			class="transition rounded-xl hover:bg-ctp-surface1"
+			class="transition rounded-xl text-ctp-red hover:bg-ctp-surface1"
 			onclick={() => {
 				if (!filters) console.error('filters is undefined while removing a filter');
 				filters = filters!.filter((f) => f != filter);
@@ -25,8 +26,7 @@
 				removeFilter(filter);
 			}}
 		>
-			<Icon icon="material-symbols:close" />
+			<Icon icon="material-symbols:delete" />
 		</button>
-		<p>{filter}</p>
 	</div>
 {/each}

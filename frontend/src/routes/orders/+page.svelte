@@ -8,8 +8,8 @@
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 	import { Collapsible } from 'bits-ui';
 	import * as FiltersList from '$lib/components/orders/filters/index';
-	import { fly, slide } from 'svelte/transition';
-	import { quadInOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
+	import { flyAndScale } from '$lib/utils/flyAndScale';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
@@ -66,11 +66,7 @@
 		/>
 	</div>
 	{#if orders && selected}
-		<div
-			in:fly={{ y: 200, delay: 0, easing: quadInOut }}
-			out:fly={{ x: 200, duration: 300 }}
-			class="flex flex-col flex-nowrap gap-3"
-		>
+		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-3">
 			{#each orders as orderTable, orderTableIndex}
 				{#if orderTable}
 					<div class="bg-ctp-surface0 shadow shadow-ctp-surface0 rounded-xl p-3">

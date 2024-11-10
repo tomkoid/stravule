@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Filters } from '$lib/api/filters';
+	import Icon from '@iconify/svelte';
 	import CategoryList from './categoryList.svelte';
 
 	interface FiltersProps {
@@ -10,14 +11,26 @@
 </script>
 
 {#if filters}
-	<div class="flex flex-col gap-1 bg-ctp-surface1 p-3 rounded-xl">
-		<p class="font-bold">Chci</p>
-		<div class="bg-ctp-surface2 rounded-xl p-2">
-			<CategoryList bind:filters={filters.include} />
+	<div class="flex flex-row bg-ctp-mantle border border-ctp-surface0 gap-1 p-3 rounded-xl">
+		<div class="flex-1">
+			<p class="font-bold flex flex-row items-center gap-1">
+				<Icon icon="mdi:tick" />
+				Chci
+			</p>
+			<p class="text-ctp-subtext0 text-sm">Jidla, které chci</p>
+			<div class="rounded-xl mt-4">
+				<CategoryList bind:filters={filters.include} />
+			</div>
 		</div>
-		<p class="font-bold">Nechci</p>
-		<div class="bg-ctp-surface2 rounded-xl p-2">
-			<CategoryList bind:filters={filters.exclude} />
+		<div class="flex-1">
+			<p class="font-bold flex flex-row items-center gap-1">
+				<Icon icon="maki:cross" />
+				Nechci
+			</p>
+			<p class="text-ctp-subtext0 text-sm">Jídla, které nechci</p>
+			<div class="rounded-xl mt-4">
+				<CategoryList bind:filters={filters.exclude} />
+			</div>
 		</div>
 	</div>
 {/if}
