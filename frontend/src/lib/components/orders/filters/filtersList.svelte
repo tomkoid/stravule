@@ -19,7 +19,7 @@
 				<Icon icon="mdi:tick" />
 				Chci
 			</p>
-			<p class="text-ctp-subtext0 text-sm">Jidla, které chci</p>
+			<p class="text-ctp-subtext0 text-sm">Jidla, která chci</p>
 			<div class="rounded-xl mt-4">
 				<CategoryList bind:filters={filters.include} category="include" />
 			</div>
@@ -29,7 +29,7 @@
 				<Icon icon="maki:cross" />
 				Nechci
 			</p>
-			<p class="text-ctp-subtext0 text-sm">Jídla, které nechci</p>
+			<p class="text-ctp-subtext0 text-sm">Jídla, která nechci</p>
 			<div class="rounded-xl mt-4">
 				<CategoryList bind:filters={filters.exclude} category="exclude" />
 			</div>
