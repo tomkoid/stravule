@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"regexp"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
@@ -53,6 +54,10 @@ func GetFilters(userHash *string) (*Filters, error) {
 }
 
 func AddFilter(userHash *string, filter Filter) (*Filters, error) {
+	if !isFilterValid(&filter.Value) {
+		return nil, errors.New("invalid filter value")
+	}
+
 	finalFilters, err := GetFilters(userHash)
 
 	if err != nil {
@@ -99,6 +104,10 @@ func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 }
 
 func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
+	if !isFilterValid(&filter.Value) {
+		return nil, errors.New("invalid filter value")
+	}
+
 	removed := false
 	finalFilters, err := GetFilters(userHash)
 
@@ -140,4 +149,11 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	}
 
 	return finalFilters, nil
+}
+
+func isFilterValid(filter *string) bool {
+	// Regular expression for alphabetic characters, including Czech diacritics
+	var re = regexp.MustCompile(`^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ ]+$`)
+
+	return re.MatchString(*filter)
 }
