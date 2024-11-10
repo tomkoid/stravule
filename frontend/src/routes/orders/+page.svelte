@@ -10,11 +10,14 @@
 	import * as FiltersList from '$lib/components/orders/filters/index';
 	import { slide } from 'svelte/transition';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
+	import Icon from '@iconify/svelte';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
 	let selected: any | boolean[][] | undefined = $state();
 	let pickOrders: any = $state(false);
+
+	let filterTabOpened = $state(false);
 
 	async function renderOrders(orders: Order[][]) {
 		selected = new Array(orders.length);
@@ -51,8 +54,17 @@
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
-	<Collapsible.Root>
-		<Collapsible.Trigger>> Filtry</Collapsible.Trigger>
+	<Collapsible.Root bind:open={filterTabOpened}>
+		<Collapsible.Trigger class="flex flex-row items-center gap-1">
+			<div>
+				{#if filterTabOpened}
+					<Icon class="text-xl rotate-180" icon="mdi:caret" />
+				{:else}
+					<Icon class="text-xl" icon="mdi:caret" />
+				{/if}
+			</div>
+			<p>Filtrování</p>
+		</Collapsible.Trigger>
 		<Collapsible.Content class="mt-2" transition={slide}>
 			<FiltersList.Root {filters} />
 		</Collapsible.Content>

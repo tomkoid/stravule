@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { removeFilter } from '$lib/api/filters';
+	import { addFilter, removeFilter } from '$lib/api/filters';
 	import Icon from '@iconify/svelte';
 
 	interface FiltersProps {
 		filters?: string[];
+		category: string;
 	}
 
-	let { filters = $bindable() }: FiltersProps = $props();
+	let { filters = $bindable(), category }: FiltersProps = $props();
+
+	let newFilter: string = $state('');
 </script>
 
 {#each filters! as filter}
@@ -30,3 +33,28 @@
 		</button>
 	</div>
 {/each}
+
+<div
+	class="flex flex-row items-center gap-1 bg-ctp-surface0 border border-ctp-surface0 mt-2 rounded w-fit text-sm"
+>
+	<input
+		placeholder="brambory, ..."
+		class="border-none bg-ctp-surface0 pl-1 w-28 h-6"
+		type="text"
+		bind:value={newFilter}
+	/>
+	<button
+		class="flex flex-row items-center gap-1 px-2 h-6 bg-ctp-mantle transition disabled:bg-ctp-crust hover:bg-ctp-crust"
+		disabled={!newFilter}
+		onclick={async () => {
+			await addFilter(newFilter, category);
+
+			// add filter to the list
+			filters = [...filters!, newFilter];
+			newFilter = '';
+		}}
+	>
+		<Icon icon="material-symbols:add" />
+		Přidat
+	</button>
+</div>

@@ -11,7 +11,9 @@
 </script>
 
 {#if filters}
-	<div class="flex flex-row bg-ctp-mantle border border-ctp-surface0 gap-1 p-3 rounded-xl">
+	<div
+		class="flex flex-col sm:flex-row bg-ctp-mantle border border-ctp-surface0 gap-8 sm:gap-4 p-3 items-center msm:items-start pl-8 sm:pl-6 md:pl-4 rounded-xl"
+	>
 		<div class="flex-1">
 			<p class="font-bold flex flex-row items-center gap-1">
 				<Icon icon="mdi:tick" />
@@ -19,7 +21,7 @@
 			</p>
 			<p class="text-ctp-subtext0 text-sm">Jidla, které chci</p>
 			<div class="rounded-xl mt-4">
-				<CategoryList bind:filters={filters.include} />
+				<CategoryList bind:filters={filters.include} category="include" />
 			</div>
 		</div>
 		<div class="flex-1">
@@ -29,7 +31,7 @@
 			</p>
 			<p class="text-ctp-subtext0 text-sm">Jídla, které nechci</p>
 			<div class="rounded-xl mt-4">
-				<CategoryList bind:filters={filters.exclude} />
+				<CategoryList bind:filters={filters.exclude} category="exclude" />
 			</div>
 		</div>
 	</div>
