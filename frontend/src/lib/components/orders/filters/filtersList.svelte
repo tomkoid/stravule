@@ -19,7 +19,9 @@
 				<Icon icon="mdi:tick" />
 				Chci
 			</p>
-			<p class="text-ctp-subtext0 text-sm">Jidla, která chci</p>
+			<p class="text-ctp-subtext0 text-sm">
+				Jídla obsahující zadané slovo v názvu, která bych si přál/a
+			</p>
 			<div class="rounded-xl mt-4">
 				<CategoryList bind:filters={filters.include} category="include" />
 			</div>
@@ -29,7 +31,9 @@
 				<Icon icon="maki:cross" />
 				Nechci
 			</p>
-			<p class="text-ctp-subtext0 text-sm">Jídla, která nechci</p>
+			<p class="text-ctp-subtext0 text-sm">
+				Jídla obsahující zadané slovo v názvu, která bych si nepřál/a
+			</p>
 			<div class="rounded-xl mt-4">
 				<CategoryList bind:filters={filters.exclude} category="exclude" />
 			</div>
