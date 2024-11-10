@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"regexp"
+	"strings"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
@@ -152,6 +153,10 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 }
 
 func isFilterValid(filter *string) bool {
+	if strings.TrimSpace(*filter) == "" {
+		return false
+	}
+
 	// Regular expression for alphabetic characters, including Czech diacritics
 	var re = regexp.MustCompile(`^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ ]+$`)
 
