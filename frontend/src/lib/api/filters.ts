@@ -1,4 +1,5 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
+import { errors } from '$lib/stores/errors.svelte';
 
 export interface Filters {
   include: string[]
@@ -15,6 +16,7 @@ export async function loadFilters(): Promise<Filters> {
   })
 
   if (req.status != 200) {
+    errors.add(await req.text())
     throw new Error(await req.text())
   }
 
@@ -39,6 +41,7 @@ export async function addFilter(filterString: string, category: string): Promise
   })
 
   if (req.status != 200) {
+    errors.add(await req.text())
     throw new Error(await req.text())
   }
 
@@ -63,6 +66,7 @@ export async function removeFilter(filterString: string): Promise<Filters> {
   })
 
   if (req.status != 200) {
+    errors.add(await req.text())
     throw new Error(await req.text())
   }
 

@@ -1,4 +1,5 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public"
+import { errors } from "$lib/stores/errors.svelte"
 
 interface LoginResponse {
   canteen: number,
@@ -17,6 +18,7 @@ export async function login(username: string, password: string, canteen: string)
   })
 
   if (req.status != 200) {
+    errors.add(await req.text())
     throw new Error(await req.text())
   }
 

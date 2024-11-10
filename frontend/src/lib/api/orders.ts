@@ -1,4 +1,5 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
+import { errors } from '$lib/stores/errors.svelte';
 import { pageLoading } from '$lib/stores/page.svelte';
 
 export interface Order {
@@ -37,6 +38,7 @@ export async function loadOrders(sid: string, canteen: string, pickOrders: boole
   })
 
   if (req.status != 200) {
+    errors.add(await req.text())
     throw new Error(await req.text())
   }
 

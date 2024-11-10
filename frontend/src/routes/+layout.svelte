@@ -8,6 +8,7 @@
 
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
 	import Icon from '@iconify/svelte';
+	import Errors from '$lib/components/layout/Errors.svelte';
 
 	let { children } = $props();
 
@@ -34,6 +35,8 @@
 		pageLoading.value = false;
 	});
 </script>
+
+<Errors />
 
 <div hidden={!pageLoading.value}>
 	<RouteLoader />
