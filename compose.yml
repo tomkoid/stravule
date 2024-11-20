@@ -18,7 +18,7 @@ services:
     build: ./frontend
     restart: unless-stopped
     environment:
-      - PUBLIC_BACKEND_URL=http://localhost:8080
+      - PUBLIC_BACKEND_URL=http://localhost:8080 # URL of the backend API which should be accessed by clients on the browser
     ports:
       - "8088:3000"
     networks:
