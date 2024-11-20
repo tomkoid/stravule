@@ -11,6 +11,8 @@
 
 	let newFilter: string = $state('');
 	let confirmButton: HTMLButtonElement;
+
+	let transactionHappening = false;
 </script>
 
 {#each filters! as filter}
@@ -55,11 +57,17 @@
 		bind:this={confirmButton}
 		disabled={!newFilter}
 		onclick={async () => {
-			await addFilter(newFilter, category);
+			if (transactionHappening) return;
 
-			// add filter to the list
-			filters = [...filters!, newFilter];
-			newFilter = '';
+			transactionHappening = true;
+			try {
+				await addFilter(newFilter, category);
+
+				// add filter to the list
+				filters = [...filters!, newFilter];
+				newFilter = '';
+			} catch (_) {}
+			transactionHappening = false;
 		}}
 	>
 		<Icon icon="material-symbols:add" />
