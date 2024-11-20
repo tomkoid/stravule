@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="flex flex-col msm:flex-row items-center space-x-2 justify-center text-center md:justify-start md:text-left md:space-x-3"
+	class="flex flex-col msm:flex-row items-center justify-center text-center md:justify-start md:text-left"
 >
 	<Checkbox.Root
 		bind:checked

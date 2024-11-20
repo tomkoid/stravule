@@ -84,14 +84,14 @@
 					<div
 						class="flex flex-col-reverse md:flex-row gap-2 md:gap-4 justify-between bg-ctp-surface0 border border-ctp-surface1 rounded-xl p-3"
 					>
-						<div>
+						<div class="flex flex-col gap-1">
 							{#each orderTable as order, orderIndex}
-								<div class="flex flex-nowrap flex-row gap-2">
+								<div class="flex flex-nowrap flex-row items-center gap-3">
 									<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
 									<!-- <input type="radio" bind:group={sel} /> -->
 									{#if order.omezeni.endsWith('E')}
 										<Checkbox
-											className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
+											className="size-[28px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
 											onclick={() => {
 												if (selected) {
 													for (let item in selected[orderTableIndex]) {
@@ -109,7 +109,7 @@
 											bind:checked={selected[orderTableIndex][orderIndex]}
 										/>
 									{:else}
-										<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
+										<div class="ml-[28px]"></div>
 									{/if}
 									<div class="flex flex-wrap flex-row break-all">
 										{order.id + 1}. {order.nazev}
