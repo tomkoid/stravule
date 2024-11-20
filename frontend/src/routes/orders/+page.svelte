@@ -78,40 +78,52 @@
 		/>
 	</div>
 	{#if orders && selected}
-		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-3">
+		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
 			{#each orders as orderTable, orderTableIndex}
 				{#if orderTable}
-					<div class="bg-ctp-surface0 shadow shadow-ctp-surface0 rounded-xl p-3">
-						{#each orderTable as order, orderIndex}
-							<div class="flex flex-nowrap flex-row gap-2">
-								<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
-								<!-- <input type="radio" bind:group={sel} /> -->
-								{#if order.omezeni.endsWith('E')}
-									<Checkbox
-										className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
-										onclick={() => {
-											if (selected) {
-												for (let item in selected[orderTableIndex]) {
-													if (
-														selected[orderTableIndex][item] != selected[orderTableIndex][orderIndex]
-													) {
-														selected[orderTableIndex][item] = false;
+					<div
+						class="flex flex-col-reverse md:flex-row gap-2 md:gap-4 justify-between bg-ctp-surface0 border border-ctp-surface1 rounded-xl p-3"
+					>
+						<div>
+							{#each orderTable as order, orderIndex}
+								<div class="flex flex-nowrap flex-row gap-2">
+									<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
+									<!-- <input type="radio" bind:group={sel} /> -->
+									{#if order.omezeni.endsWith('E')}
+										<Checkbox
+											className="size-[20px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
+											onclick={() => {
+												if (selected) {
+													for (let item in selected[orderTableIndex]) {
+														if (
+															selected[orderTableIndex][item] !=
+															selected[orderTableIndex][orderIndex]
+														) {
+															selected[orderTableIndex][item] = false;
+														}
 													}
+												} else {
+													console.log('something really bad happened');
 												}
-											} else {
-												console.log('something really bad happened');
-											}
-										}}
-										bind:checked={selected[orderTableIndex][orderIndex]}
-									/>
-								{:else}
-									<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
-								{/if}
-								<div class="flex flex-wrap flex-row break-all">
-									{order.id + 1}. {order.nazev}
+											}}
+											bind:checked={selected[orderTableIndex][orderIndex]}
+										/>
+									{:else}
+										<div class="ml-[20px] msm:ml-[28px] md:ml-[32px]"></div>
+									{/if}
+									<div class="flex flex-wrap flex-row break-all">
+										{order.id + 1}. {order.nazev}
+									</div>
 								</div>
-							</div>
-						{/each}
+							{/each}
+						</div>
+						<div>
+							<p
+								class="text-ctp-text md:text-ctp-subtext0 text-xl md:text-base font-bold md:font-normal"
+							>
+								{orderTable[0].datum}
+							</p>
+						</div>
 					</div>
 				{/if}
 			{/each}
