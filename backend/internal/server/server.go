@@ -1,6 +1,9 @@
 package server
 
 import (
+	"os"
+
+	sMiddleware "codeberg.org/tomkoid/stravule/backend/internal/server/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -12,6 +15,10 @@ func StartServer() {
 	}))
 	e.Use(middleware.BodyLimit("6M"))
 	e.Use(middleware.CORS())
+
+	if os.Getenv("BETATESTERS_ONLY") == "true" {
+		e.Use(sMiddleware.Betatester)
+	}
 
 	e.HideBanner = true
 

@@ -33,22 +33,28 @@ func (q *Queries) AddFilter(ctx context.Context, arg AddFilterParams) error {
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    user_hash, sid
+    user_hash, sid, is_beta_tester
 ) VALUES (
-    $1, $2
+    $1, $2, $3
 )
-RETURNING id, user_hash, sid
+RETURNING id, user_hash, sid, is_beta_tester
 `
 
 type CreateUserParams struct {
-	UserHash string
-	Sid      string
+	UserHash     string
+	Sid          string
+	IsBetaTester bool
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.UserHash, arg.Sid)
+	row := q.db.QueryRow(ctx, createUser, arg.UserHash, arg.Sid, arg.IsBetaTester)
 	var i User
-	err := row.Scan(&i.ID, &i.UserHash, &i.Sid)
+	err := row.Scan(
+		&i.ID,
+		&i.UserHash,
+		&i.Sid,
+		&i.IsBetaTester,
+	)
 	return i, err
 }
 
@@ -71,14 +77,19 @@ func (q *Queries) DeleteFilter(ctx context.Context, arg DeleteFilterParams) erro
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_hash, sid FROM users
+SELECT id, user_hash, sid, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, userHash string) (User, error) {
 	row := q.db.QueryRow(ctx, getUser, userHash)
 	var i User
-	err := row.Scan(&i.ID, &i.UserHash, &i.Sid)
+	err := row.Scan(
+		&i.ID,
+		&i.UserHash,
+		&i.Sid,
+		&i.IsBetaTester,
+	)
 	return i, err
 }
 

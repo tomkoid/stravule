@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
@@ -117,7 +118,7 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 	userHash := utils.GetUserHash(username, password, canteen)
 
 	// insert new user into db if it doesn't exist
-	_, err = database.DB.GetUser(ctx, userHash)
+	user, err := database.DB.GetUser(ctx, userHash)
 	if err != nil {
 		_, err = database.DB.CreateUser(ctx, db.CreateUserParams{
 			UserHash: userHash,
@@ -127,6 +128,10 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 			log.Println(err)
 		} else {
 			log.Println("db: created new user with hash", userHash)
+		}
+	} else {
+		if os.Getenv("BETATESTERS_ONLY") == "true" && !user.IsBetaTester {
+			return nil, errors.New("Tento uživatel není betatesterem.")
 		}
 	}
 

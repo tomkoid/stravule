@@ -17,7 +17,8 @@ type Filter struct {
 }
 
 type User struct {
-	ID       int32
-	UserHash string
-	Sid      string
+	ID           int32
+	UserHash     string
+	Sid          string
+	IsBetaTester bool
 }
