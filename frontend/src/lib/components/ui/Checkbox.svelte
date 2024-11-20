@@ -42,11 +42,13 @@
 			{/if}
 		</Checkbox.Indicator>
 	</Checkbox.Root>
-	<Label.Root
-		id="label"
-		for="label"
-		class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-	>
-		{label}
-	</Label.Root>
+	{#if label !== ''}
+		<Label.Root
+			id="label"
+			for="label"
+			class="text-sm font-medium ml-2 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+		>
+			{label}
+		</Label.Root>
+	{/if}
 </div>
