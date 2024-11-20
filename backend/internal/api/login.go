@@ -131,7 +131,7 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 		}
 	} else {
 		if os.Getenv("BETATESTERS_ONLY") == "true" && !user.IsBetaTester {
-			return nil, errors.New("Tento uživatel není betatesterem.")
+			return nil, errors.New("Tento uživatel není betatesterem. Zeptej se administrátora této instance a napiš mu tvůj kód, aby ti povolil přístup. Tvůj kód je: " + userHash)
 		}
 	}
 
