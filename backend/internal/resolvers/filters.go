@@ -68,12 +68,12 @@ func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 	// if filter already exists, do nothing
 	for _, f := range finalFilters.Include {
 		if f == filter.Value {
-			return nil, errors.New("filter already exists in includeFilters, please remove it first")
+			return nil, errors.New("Filter už existuje v kategorii chci.")
 		}
 	}
 	for _, f := range finalFilters.Exclude {
 		if f == filter.Value {
-			return nil, errors.New("filter already exists in excludeFilters, please remove it first")
+			return nil, errors.New("Filter už existuje v kategorii nechci.")
 		}
 	}
 
@@ -146,7 +146,7 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	}
 
 	if !removed {
-		return nil, errors.New("filter not found anywhere")
+		return nil, errors.New("Filter nikde nenalezen.")
 	}
 
 	return finalFilters, nil
