@@ -10,6 +10,7 @@ func StartServer() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "[${method} ${uri} ${status}]\n",
 	}))
+	e.Use(middleware.BodyLimit("6M"))
 	e.Use(middleware.CORS())
 
 	e.HideBanner = true
