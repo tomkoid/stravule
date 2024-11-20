@@ -46,7 +46,7 @@
 		<Label.Root
 			id="label"
 			for="label"
-			class="text-sm font-medium ml-2 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+			class="ml-2 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 		>
 			{label}
 		</Label.Root>

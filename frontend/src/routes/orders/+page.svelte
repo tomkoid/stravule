@@ -72,7 +72,7 @@
 
 	<div class="flex gap-2">
 		<Checkbox
-			className="size-[25px] rounded-md shadow shadow-ctp-mantle bg-ctp-surface0 data-[state=unchecked]:bg-ctp-surface0 data-[state=unchecked]:hover:bg-ctp-surface1 data-[state=checked]:hover:bg-ctp-mantle"
+			className="size-[25px] rounded-md border border-ctp-surface1 bg-ctp-surface0 data-[state=unchecked]:bg-ctp-surface0 data-[state=unchecked]:hover:bg-ctp-surface1 data-[state=checked]:hover:bg-ctp-mantle"
 			bind:checked={pickOrders}
 			label="Zobrazit vybrané obědy od Stravule"
 		/>
