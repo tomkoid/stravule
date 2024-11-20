@@ -31,7 +31,7 @@
 				<Dialog.Overlay
 					transition={fade}
 					transitionConfig={{ duration: 150 }}
-					class="fixed inset-0 z-50 bg-black/80"
+					class="fixed inset-0 z-50 backdrop-blur bg-black/20"
 				/>
 				<Dialog.Content
 					transition={flyAndScale}
