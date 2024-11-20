@@ -10,6 +10,7 @@
 	let { filters = $bindable(), category }: FiltersProps = $props();
 
 	let newFilter: string = $state('');
+	let confirmButton: HTMLButtonElement;
 </script>
 
 {#each filters! as filter}
@@ -41,10 +42,17 @@
 		placeholder="brambory, ..."
 		class="border-none bg-ctp-surface0 pl-1 w-28 h-6"
 		type="text"
+		onkeypresscapture={(e) => {
+			if (e.key == 'Enter') {
+				e.preventDefault();
+				confirmButton.click();
+			}
+		}}
 		bind:value={newFilter}
 	/>
 	<button
 		class="flex flex-row items-center gap-1 px-2 h-6 bg-ctp-mantle transition disabled:bg-ctp-crust hover:bg-ctp-crust"
+		bind:this={confirmButton}
 		disabled={!newFilter}
 		onclick={async () => {
 			await addFilter(newFilter, category);
