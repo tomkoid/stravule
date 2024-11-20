@@ -1,9 +1,9 @@
-FROM node:23-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json .
-# RUN npm install --verbose
+RUN npm install --verbose
 
 COPY .npmrc .
 COPY postcss.config.js .
@@ -16,7 +16,6 @@ COPY .env .
 
 COPY ./static /app/static
 COPY ./src /app/src
-COPY ./node_modules /app/node_modules
 
 RUN npm run build
 
