@@ -1,0 +1,43 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0:8080
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?sslmode=disable
+
+      - BETATESTERS_ONLY=true
+    depends_on:
+      - postgresdb
+    networks:
+      - default
+
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+
+  postgresdb:
+    image: postgres:17
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    networks:
+      - default
+
+volumes:
+  db_data:
+
+networks:
+  default:
+    driver: bridge
