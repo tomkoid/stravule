@@ -1,0 +1,2 @@
+static/favicon.png filter=lfs diff=lfs merge=lfs -text
+static filter=lfs diff=lfs merge=lfs -text

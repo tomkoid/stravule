@@ -54,6 +54,14 @@
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
+	<div class="flex gap-2">
+		<Checkbox
+			className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
+			bind:checked={pickOrders}
+			label="Zobrazit vybrané obědy od Stravule"
+		/>
+	</div>
+
 	<Collapsible.Root bind:open={filterTabOpened}>
 		<Collapsible.Trigger class="flex flex-row items-center gap-1">
 			<div>
@@ -70,19 +78,12 @@
 		</Collapsible.Content>
 	</Collapsible.Root>
 
-	<div class="flex gap-2">
-		<Checkbox
-			className="size-[25px] rounded-md border border-ctp-surface1 bg-ctp-surface0 data-[state=unchecked]:bg-ctp-surface0 data-[state=unchecked]:hover:bg-ctp-surface1 data-[state=checked]:hover:bg-ctp-mantle"
-			bind:checked={pickOrders}
-			label="Zobrazit vybrané obědy od Stravule"
-		/>
-	</div>
 	{#if orders && selected}
 		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
 			{#each orders as orderTable, orderTableIndex}
 				{#if orderTable}
 					<div
-						class="flex flex-col-reverse md:flex-row gap-2 md:gap-4 justify-between bg-ctp-surface0 border border-ctp-surface1 rounded-xl p-3"
+						class="flex flex-col-reverse md:flex-row gap-2 md:gap-4 justify-between bg-surface0 border border-surface1 rounded-xl p-3"
 					>
 						<div class="flex flex-col gap-1">
 							{#each orderTable as order, orderIndex}
@@ -91,7 +92,7 @@
 									<!-- <input type="radio" bind:group={sel} /> -->
 									{#if order.omezeni.endsWith('E')}
 										<Checkbox
-											className="size-[28px] rounded-md shadow shadow-ctp-surface0 bg-ctp-surface1 data-[state=unchecked]:bg-ctp-surface1 data-[state=unchecked]:hover:bg-ctp-surface2 data-[state=checked]:hover:bg-ctp-mantle"
+											className="size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=unchecked]:hover:bg-surface2 data-[state=checked]:hover:bg-crust"
 											onclick={() => {
 												if (selected) {
 													for (let item in selected[orderTableIndex]) {
@@ -118,9 +119,7 @@
 							{/each}
 						</div>
 						<div>
-							<p
-								class="text-ctp-text md:text-ctp-subtext0 text-xl md:text-base font-bold md:font-normal"
-							>
+							<p class="text-text md:text-subtext0 text-xl md:text-base font-bold md:font-normal">
 								{orderTable[0].datum}
 							</p>
 						</div>
@@ -131,12 +130,6 @@
 	{:else}
 		<p>Načítání obědů..</p>
 	{/if}
-	<button
-		class="bg-ctp-blue text-ctp-base border rounded-xl p-2 mb-2"
-		onclick={() => {
-			console.log($state.snapshot(selected));
-		}}>print order list object to console</button
-	>
 </div>
 
 <svelte:head>
