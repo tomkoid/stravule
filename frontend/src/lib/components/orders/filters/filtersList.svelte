@@ -15,7 +15,7 @@
 		class="flex flex-col sm:flex-row bg-ctp-mantle border border-ctp-surface0 gap-8 sm:gap-4 p-3 items-center msm:items-start pl-8 sm:pl-6 md:pl-4 rounded-xl"
 	>
 		<div class="flex-1">
-			<p class="font-bold flex flex-row items-center gap-1">
+			<p class="font-bold flex flex-row items-center gap-1 text-lg">
 				<Icon icon="mdi:tick" />
 				Chci
 			</p>
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="flex-1">
-			<p class="font-bold flex flex-row items-center gap-1">
+			<p class="font-bold flex flex-row items-center gap-1 text-lg">
 				<Icon icon="maki:cross" />
 				Nechci
 			</p>

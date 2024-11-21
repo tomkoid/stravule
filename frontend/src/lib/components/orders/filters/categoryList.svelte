@@ -23,7 +23,7 @@
 {#if filters}
 	{#each filters as filter}
 		<div class="flex flex-row items-center gap-1">
-			<p class="text text-sm">{filter}</p>
+			<p class="text">{filter}</p>
 
 			<Dialog.Root bind:open={dialogShown}>
 				<Dialog.Trigger onclick={() => (editFilter = filter)}>
@@ -33,7 +33,7 @@
 					<Dialog.Overlay
 						transition={fade}
 						transitionConfig={{ duration: 150 }}
-						class="fixed inset-0 z-50 bg-black/30"
+						class="fixed inset-0 z-50 bg-black/10"
 					/>
 					<Dialog.Content
 						transition={flyAndScale}
@@ -89,7 +89,7 @@
 {/if}
 
 <div
-	class="flex flex-row items-center gap-1 bg-ctp-surface0 border border-ctp-surface0 mt-2 rounded w-fit text-sm"
+	class="flex flex-row items-center gap-1 bg-ctp-surface0 border border-ctp-surface0 mt-2 rounded w-fit"
 >
 	<input
 		placeholder="brambory, ..."
@@ -104,7 +104,7 @@
 		bind:value={newFilter}
 	/>
 	<button
-		class="flex flex-row items-center gap-1 px-2 h-6 bg-ctp-mantle transition disabled:bg-ctp-crust hover:bg-ctp-crust"
+		class="flex flex-row items-center gap-1 px-2 h-6 bg-ctp-base transition disabled:bg-ctp-crust hover:bg-ctp-crust"
 		bind:this={confirmButton}
 		disabled={!newFilter}
 		onclick={async () => {
