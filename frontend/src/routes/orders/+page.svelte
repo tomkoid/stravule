@@ -121,7 +121,7 @@
 									{/if}
 									<div
 										class="flex flex-wrap flex-row break-all"
-										class:text-subtext0={!checkIfAfterNow(order.casKonec) ||
+										class:text-subtext1={!checkIfAfterNow(order.casKonec) ||
 											order.omezeni.endsWith('B')}
 									>
 										{order.id + 1}. {order.nazev}
