@@ -117,10 +117,12 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 	ctx := context.Background()
 	userHash := utils.GetUserHash(username, password, canteen)
 
+	betatesterErrorMsg := "Tento uživatel není betatesterem. Zeptej se administrátora této instance a napiš mu tvůj kód, aby ti povolil přístup. Tvůj kód je: " + userHash
+
 	// insert new user into db if it doesn't exist
 	user, err := database.DB.GetUser(ctx, userHash)
 	if err != nil {
-		_, err = database.DB.CreateUser(ctx, db.CreateUserParams{
+		newUser, err := database.DB.CreateUser(ctx, db.CreateUserParams{
 			UserHash: userHash,
 			Sid:      response.SID,
 		})
@@ -129,9 +131,13 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 		} else {
 			log.Println("db: created new user with hash", userHash)
 		}
+
+		if os.Getenv("BETATESTERS_ONLY") == "true" && !newUser.IsBetaTester {
+			return nil, errors.New(betatesterErrorMsg)
+		}
 	} else {
 		if os.Getenv("BETATESTERS_ONLY") == "true" && !user.IsBetaTester {
-			return nil, errors.New("Tento uživatel není betatesterem. Zeptej se administrátora této instance a napiš mu tvůj kód, aby ti povolil přístup. Tvůj kód je: " + userHash)
+			return nil, errors.New(betatesterErrorMsg)
 		}
 	}
 
