@@ -6,13 +6,13 @@
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  @apply text-ctp-text;
+  @apply text-text;
 }
 
 body {
   margin: 0;
   padding: 0;
-  @apply bg-ctp-base;
+  @apply bg-base;
 }
 /**/
 /* @media(max-width: 500px) { */
@@ -45,8 +45,8 @@ body {
 
 .login-input {
   @apply p-2;
-  @apply bg-ctp-mantle;
+  @apply bg-mantle;
   @apply shadow;
-  @apply shadow-ctp-mantle;
+  @apply shadow-mantle;
   @apply rounded;
 }

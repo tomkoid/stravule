@@ -37,24 +37,24 @@
 					/>
 					<Dialog.Content
 						transition={flyAndScale}
-						class="fixed left-[50%] top-[50%] z-50 w-full max-w-[94%] translate-x-[-50%] translate-y-[-50%] rounded-card-lg rounded-xl border border-ctp-mantle bg-ctp-base p-5 shadow-popover outline-none sm:max-w-[490px] md:w-full"
+						class="fixed left-[50%] top-[50%] z-50 w-full max-w-[94%] translate-x-[-50%] translate-y-[-50%] rounded-card-lg rounded-xl border border-mantle bg-base p-5 shadow-popover outline-none sm:max-w-[490px] md:w-full"
 					>
 						<Dialog.Title
 							class="flex w-full items-center justify-center text-lg font-semibold tracking-tight"
 							>Jste si jisti?</Dialog.Title
 						>
-						<Dialog.Description class="text-sm text-ctp-subtext0 mb-4">
+						<Dialog.Description class="text-sm text-subtext1 mb-4">
 							Tímto potvrzujete, že chcete smazat filtr "{editFilter}".
 						</Dialog.Description>
 						<div class="flex flex-row items-center justify-center gap-2 h-12">
 							<button
-								class="bg-ctp-surface0 hover:bg-ctp-surface1 transition-all rounded hover:rounded-lg flex flex-row items-center justify-center gap-1 px-2 h-full w-full"
+								class="bg-surface0 hover:bg-surface1 transition-all rounded hover:rounded-lg flex flex-row items-center justify-center gap-1 px-2 h-full w-full"
 								onclick={() => (dialogShown = false)}
 							>
 								Ne
 							</button>
 							<button
-								class="flex flex-row items-center justify-center text-center gap-1 px-2 h-full w-full rounded hover:rounded-lg text-ctp-base bg-ctp-red transition disabled:bg-ctp-crust hover:bg-ctp-maroon"
+								class="flex flex-row items-center justify-center text-center gap-1 px-2 h-full w-full rounded hover:rounded-lg text-base bg-ctp-red transition disabled:bg-crust hover:bg-ctp-maroon"
 								onclick={async () => {
 									if (!filters) console.error('filters is undefined while removing a filter');
 									filters = filters!.filter((f) => f != editFilter);
@@ -88,12 +88,10 @@
 	{/each}
 {/if}
 
-<div
-	class="flex flex-row items-center gap-1 bg-ctp-surface0 border border-ctp-surface0 mt-2 rounded w-fit"
->
+<div class="flex flex-row items-center gap-1 bg-surface0 border border-surface0 mt-2 rounded w-fit">
 	<input
 		placeholder="brambory, ..."
-		class="border-none bg-ctp-surface0 pl-1 w-28 h-6"
+		class="border-none bg-surface0 pl-1 w-28 h-6"
 		type="text"
 		onkeypresscapture={(e) => {
 			if (e.key == 'Enter') {
@@ -104,7 +102,7 @@
 		bind:value={newFilter}
 	/>
 	<button
-		class="flex flex-row items-center gap-1 px-2 h-6 bg-ctp-base transition disabled:bg-ctp-crust hover:bg-ctp-crust"
+		class="flex flex-row items-center gap-1 px-2 h-6 bg-base transition disabled:bg-crust hover:bg-crust"
 		bind:this={confirmButton}
 		disabled={!newFilter}
 		onclick={async () => {

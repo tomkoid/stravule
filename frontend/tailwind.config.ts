@@ -12,7 +12,29 @@ export default {
 			xl: "1280px",
 			"2xl": "1536px"
 		},
-		extend: {}
+		// colors: {
+		// },
+		extend: {
+			colors: {
+				"base2": "#050609",
+				// "crust": "#0d1321",
+				"crust": "hsl(240deg 8% 8%)",
+				"mantle": "hsl(240deg 8% 12%)",
+				"base": "#212529",
+				// "surface0": "#343a40",
+				"surface0": "hsl(240deg 8% 20%)",
+				"surface1": "hsl(240deg 8% 27%)",
+				"surface2": "hsl(240deg 8% 35%)",
+				"text": "hsl(60, 10%, 92%)",
+				"subtext2": "hsl(240, 10%, 88%)",
+				"subtext1": "hsl(240, 10%, 78%)",
+				"subtext0": "hsl(240, 10%, 64%)",
+				"success": "#C0D684",
+				"success2": "#CBEAA6",
+				"mauve": "#BAA5FF",
+				"blue": "#8ecae6",
+			}
+		}
 	},
 	future: {
 		hoverOnlyWhenSupported: true,
