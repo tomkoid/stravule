@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +11,9 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
+
+	"codeberg.org/tomkoid/stravule/backend/internal/cache"
 )
 
 type orderRequest struct {
@@ -52,46 +56,54 @@ type order struct {
 
 // Returns a list of orders
 func Orders(sid string, canteen string) ([][]order, error) {
-	requestBody := orderRequest{
-		Cislo:      canteen,
-		Lang:       "EN",
-		S5url:      "",
-		Podminka:   "",
-		Konto:      0,
-		IgnoreCert: "false", // lol
-		SID:        sid,
-	}
+	var bodyBytes []byte
+	existsInRDB := cache.RDB.Exists(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen)).Val()
+	if existsInRDB != 1 {
+		requestBody := orderRequest{
+			Cislo:      canteen,
+			Lang:       "EN",
+			S5url:      "",
+			Podminka:   "",
+			Konto:      0,
+			IgnoreCert: "false", // lol
+			SID:        sid,
+		}
 
-	requestBodyJson, err := json.Marshal(requestBody)
-	if err != nil {
-		return nil, err
-	}
+		requestBodyJson, err := json.Marshal(requestBody)
+		if err != nil {
+			return nil, err
+		}
 
-	r, err := http.NewRequest("POST", "https://app.strava.cz/api/objednavky", bytes.NewBuffer(requestBodyJson))
-	if err != nil {
-		return nil, err
-	}
+		r, err := http.NewRequest("POST", "https://app.strava.cz/api/objednavky", bytes.NewBuffer(requestBodyJson))
+		if err != nil {
+			return nil, err
+		}
 
-	res, err := client.Do(r)
-	if err != nil {
-		return nil, err
-	}
+		res, err := client.Do(r)
+		if err != nil {
+			return nil, err
+		}
 
-	// read body
-	bodyBytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		panic("xd")
-	}
-	bodyString := string(bodyBytes)
-	// fmt.Println(bodyString)
-	_ = bodyString
+		// read body
+		bodyBytes, err = io.ReadAll(res.Body)
+		if err != nil {
+			panic("xd")
+		}
+		bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		_ = bodyString
 
-	if res.StatusCode == 555 {
-		return nil, errors.New("Wrong credentials, try again with the right credentials")
-	}
+		if res.StatusCode == 555 {
+			return nil, errors.New("Wrong credentials, try again with the right credentials")
+		}
 
-	if res.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("Status code: %d", res.StatusCode))
+		if res.StatusCode != 200 {
+			return nil, errors.New(fmt.Sprintf("Status code: %d", res.StatusCode))
+		}
+
+		cache.RDB.Set(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen), bodyBytes, time.Minute*5)
+	} else {
+		bodyBytes = []byte(cache.RDB.Get(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen)).Val())
 	}
 
 	var response map[string][]order

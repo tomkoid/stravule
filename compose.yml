@@ -7,6 +7,7 @@ services:
     environment:
       - HOST=0.0.0.0:8080
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?sslmode=disable
+      - REDIS_URL=valkey:6379
 
       - BETATESTERS_ONLY=true
     depends_on:
@@ -39,8 +40,17 @@ services:
     networks:
       - default
 
+  valkey:
+    image: valkey/valkey:8
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - valkey_data:/data
+
 volumes:
   db_data:
+  valkey_data:
 
 networks:
   default:
