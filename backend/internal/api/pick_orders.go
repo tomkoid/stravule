@@ -8,6 +8,19 @@ import (
 	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
 )
 
+func CheckOrderingTime(orderingEndTime string) (bool, error) {
+	timeKonec, err := time.Parse(time.RFC3339, fmt.Sprintf("%sZ", orderingEndTime))
+	if err != nil {
+		return false, err
+	}
+
+	if !timeKonec.After(time.Now()) {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 // returns a list of orders, used filters and possibly an error
 func PickOrders(sid string, canteen string, userHash string) ([][]order, error) {
 	res, err := Orders(sid, canteen)
@@ -30,12 +43,12 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 				continue
 			}
 
-			timeKonec, err := time.Parse(time.RFC3339, fmt.Sprintf("%sZ", order.CasKonec))
+			orderingTimeCheck, err := CheckOrderingTime(order.CasKonec)
 			if err != nil {
 				return nil, err
 			}
 
-			if !timeKonec.After(time.Now()) {
+			if !orderingTimeCheck {
 				continue
 			}
 
@@ -63,6 +76,15 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 
 			// rank
 			for j := 1; j < len(res[i]); j++ {
+				orderingTimeCheck, err := CheckOrderingTime(res[i][j].CasKonec)
+				if err != nil {
+					return nil, err
+				}
+
+				if !orderingTimeCheck {
+					continue
+				}
+
 				if res[i][j].Score > res[i][highestScoreIdx].Score {
 					highestScoreIdx = j
 				}
@@ -77,6 +99,15 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 
 			// order the order if there is a positive score and it is the highest score in the orderTable
 			if res[i][highestScoreIdx].Score >= 0 {
+				orderingTimeCheck, err := CheckOrderingTime(res[i][highestScoreIdx].CasKonec)
+				if err != nil {
+					return nil, err
+				}
+
+				if !orderingTimeCheck {
+					continue
+				}
+
 				res[i][highestScoreIdx].Pocet = 1
 			} else {
 				res[i][highestScoreIdx].Pocet = 0
