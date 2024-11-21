@@ -16,14 +16,6 @@ func Orders(c echo.Context) error {
 	pickQuery := c.QueryParam("pick")
 	userHash := c.QueryParam("user_hash")
 
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing SID or canteen query parameter")
-	}
-
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter")
-	}
-
 	if pickQuery != "" {
 		pickTmp, err := strconv.ParseBool(pickQuery)
 		if err != nil {
@@ -54,14 +46,6 @@ func SendOrders(c echo.Context) error {
 	sid := c.QueryParam("sid")
 	canteen := c.QueryParam("canteen")
 	userHash := c.QueryParam("user_hash")
-
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing SID or canteen query parameter")
-	}
-
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter")
-	}
 
 	err := api.SendOrders(api.SendOrdersRequest{
 		SID:   sid,
