@@ -1,10 +1,13 @@
 package routes
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/api"
+	"codeberg.org/tomkoid/stravule/backend/internal/cache"
 	"github.com/labstack/echo/v4"
 )
 
@@ -56,6 +59,8 @@ func SendOrders(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+
+	cache.RDB.Del(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen)).Val()
 
 	return c.String(http.StatusOK, "sent")
 }

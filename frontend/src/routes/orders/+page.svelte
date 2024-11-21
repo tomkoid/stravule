@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { loadOrders } from '$lib/api/orders';
+	import { sendOrders } from '$lib/api/orders';
 	import { loadFilters } from '$lib/api/filters';
 	import type { Order } from '$lib/api/orders';
 	import type { Filters } from '$lib/api/filters';
@@ -83,6 +84,19 @@
 			<FiltersList.Root {filters} />
 		</Collapsible.Content>
 	</Collapsible.Root>
+
+	{#if pickOrders}
+		<button
+			onclick={async () => {
+				await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+				pickOrders = false;
+			}}
+			class="flex flex-row items-center gap-1 px-2 py-1 w-fit rounded bg-ctp-green text-base transition-all hover:rounded-xl"
+		>
+			<Icon color="inherit" icon="mdi:check" />
+			Potrvdit změny od Stravule a nastavit obědy</button
+		>
+	{/if}
 
 	{#if orders && selected}
 		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
