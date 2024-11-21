@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
 )
@@ -26,6 +27,15 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 			order := &res[i][j]
 
 			if strings.HasSuffix(order.Omezeni, "B") {
+				continue
+			}
+
+			timeKonec, err := time.Parse(time.RFC3339, fmt.Sprintf("%sZ", order.CasKonec))
+			if err != nil {
+				return nil, err
+			}
+
+			if !timeKonec.After(time.Now()) {
 				continue
 			}
 
