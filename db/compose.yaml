@@ -8,8 +8,16 @@ services:
     ports:
       - 5433:5432
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=ultrasecurepassword
       - POSTGRES_USER=stravule
       - POSTGRES_DB=stravule
+
+  valkey:
+    image: valkey/valkey:8
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes: 
+      - ./valkey:/data
