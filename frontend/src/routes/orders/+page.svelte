@@ -51,6 +51,12 @@
 			}
 		);
 	});
+
+	const checkIfAfterNow = (timeString: string) => {
+		const givenTime = new Date(timeString);
+		const now = new Date();
+		return givenTime > now;
+	};
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
@@ -92,7 +98,7 @@
 									<!-- <input type="radio" bind:group={sel} /> -->
 									{#if order.omezeni.endsWith('E')}
 										<Checkbox
-											className="size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=unchecked]:hover:bg-surface2 data-[state=checked]:hover:bg-crust"
+											className={`size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=checked]:hover:bg-crust ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
 											onclick={() => {
 												if (selected) {
 													for (let item in selected[orderTableIndex]) {
@@ -108,11 +114,16 @@
 												}
 											}}
 											bind:checked={selected[orderTableIndex][orderIndex]}
+											disabled={!checkIfAfterNow(order.casKonec)}
 										/>
 									{:else}
 										<div class="ml-[28px]"></div>
 									{/if}
-									<div class="flex flex-wrap flex-row break-all">
+									<div
+										class="flex flex-wrap flex-row break-all"
+										class:text-subtext0={!checkIfAfterNow(order.casKonec) ||
+											order.omezeni.endsWith('B')}
+									>
 										{order.id + 1}. {order.nazev}
 									</div>
 								</div>
