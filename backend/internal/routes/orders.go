@@ -1,10 +1,13 @@
 package routes
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/api"
+	"codeberg.org/tomkoid/stravule/backend/internal/cache"
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,14 +19,6 @@ func Orders(c echo.Context) error {
 	pickQuery := c.QueryParam("pick")
 	userHash := c.QueryParam("user_hash")
 
-	if sid == "" || canteen == "" {
-		return c.String(http.StatusBadRequest, "Missing SID or canteen query parameter")
-	}
-
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter")
-	}
-
 	if pickQuery != "" {
 		pickTmp, err := strconv.ParseBool(pickQuery)
 		if err != nil {
@@ -34,7 +29,7 @@ func Orders(c echo.Context) error {
 	}
 
 	if pick {
-		res, err := api.PickOrders(sid, canteen, userHash)
+		res, _, err := api.PickOrders(sid, canteen, userHash)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -48,4 +43,24 @@ func Orders(c echo.Context) error {
 
 		return c.JSON(http.StatusOK, res)
 	}
+}
+
+func SendOrders(c echo.Context) error {
+	sid := c.QueryParam("sid")
+	canteen := c.QueryParam("canteen")
+	userHash := c.QueryParam("user_hash")
+
+	err := api.SendOrders(api.SendOrdersRequest{
+		SID:   sid,
+		Cislo: canteen,
+		Lang:  "CZ",
+		Url:   "",
+	}, userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	cache.RDB.Del(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen)).Val()
+
+	return c.String(http.StatusOK, "sent")
 }

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { loadOrders } from '$lib/api/orders';
+	import { sendOrders } from '$lib/api/orders';
 	import { loadFilters } from '$lib/api/filters';
 	import type { Order } from '$lib/api/orders';
 	import type { Filters } from '$lib/api/filters';
@@ -51,6 +52,12 @@
 			}
 		);
 	});
+
+	const checkIfAfterNow = (timeString: string) => {
+		const givenTime = new Date(timeString);
+		const now = new Date();
+		return givenTime > now;
+	};
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
@@ -78,6 +85,19 @@
 		</Collapsible.Content>
 	</Collapsible.Root>
 
+	{#if pickOrders}
+		<button
+			onclick={async () => {
+				await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+				pickOrders = false;
+			}}
+			class="flex flex-row items-center gap-1 px-2 py-1 w-fit rounded bg-ctp-green text-base transition-all hover:rounded-xl"
+		>
+			<Icon color="inherit" icon="mdi:check" />
+			Potrvdit změny od Stravule a nastavit obědy</button
+		>
+	{/if}
+
 	{#if orders && selected}
 		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
 			{#each orders as orderTable, orderTableIndex}
@@ -92,7 +112,7 @@
 									<!-- <input type="radio" bind:group={sel} /> -->
 									{#if order.omezeni.endsWith('E')}
 										<Checkbox
-											className="size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=unchecked]:hover:bg-surface2 data-[state=checked]:hover:bg-crust"
+											className={`size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=checked]:hover:bg-crust ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
 											onclick={() => {
 												if (selected) {
 													for (let item in selected[orderTableIndex]) {
@@ -108,11 +128,16 @@
 												}
 											}}
 											bind:checked={selected[orderTableIndex][orderIndex]}
+											disabled={!checkIfAfterNow(order.casKonec)}
 										/>
 									{:else}
 										<div class="ml-[28px]"></div>
 									{/if}
-									<div class="flex flex-wrap flex-row break-all">
+									<div
+										class="flex flex-wrap flex-row break-all"
+										class:text-subtext1={!checkIfAfterNow(order.casKonec) ||
+											order.omezeni.endsWith('B')}
+									>
 										{order.id + 1}. {order.nazev}
 									</div>
 								</div>

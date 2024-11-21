@@ -2,7 +2,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-* {
+:not(path) {
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
   scroll-behavior: smooth;

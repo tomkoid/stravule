@@ -33,6 +33,7 @@ export default {
 				"success2": "#CBEAA6",
 				"mauve": "#BAA5FF",
 				"blue": "#8ecae6",
+				"green": "#80ed99",
 			}
 		}
 	},

@@ -10,10 +10,6 @@ import (
 func ListFilters(c echo.Context) error {
 	userHash := c.QueryParam("user_hash")
 
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
-	}
-
 	filters, err := resolvers.GetFilters(&userHash)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
@@ -24,10 +20,6 @@ func ListFilters(c echo.Context) error {
 
 func AddFilter(c echo.Context) error {
 	userHash := c.QueryParam("user_hash")
-
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
-	}
 
 	filter := resolvers.Filter{}
 	if err := c.Bind(&filter); err != nil {
@@ -44,10 +36,6 @@ func AddFilter(c echo.Context) error {
 
 func RemoveFilter(c echo.Context) error {
 	userHash := c.QueryParam("user_hash")
-
-	if userHash == "" {
-		return c.String(http.StatusBadRequest, "Missing `user_hash` query parameter.")
-	}
 
 	filter := resolvers.Filter{}
 	if err := c.Bind(&filter); err != nil {
