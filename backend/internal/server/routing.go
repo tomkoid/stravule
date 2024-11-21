@@ -8,6 +8,7 @@ import (
 func initAPI(e *echo.Group) error {
 	e.POST("/login", routes.Login)
 	e.GET("/orders", routes.Orders)
+	e.POST("/save_orders", routes.SendOrders)
 	e.GET("/filters", routes.ListFilters)
 	e.POST("/filters", routes.AddFilter)
 	e.DELETE("/filters", routes.RemoveFilter)

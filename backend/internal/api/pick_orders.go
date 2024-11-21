@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -21,23 +22,34 @@ func CheckOrderingTime(orderingEndTime string) (bool, error) {
 	return true, nil
 }
 
-// returns a list of orders, used filters and possibly an error
-func PickOrders(sid string, canteen string, userHash string) ([][]order, error) {
+func deepCopyOrders(src [][]order) [][]order {
+	dest := make([][]order, len(src))
+	for i := range src {
+		dest[i] = make([]order, len(src[i]))
+		copy(dest[i], src[i])
+	}
+	return dest
+}
+
+// returns a list of picked orders, originally used orders and used filters and possibly an error
+func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]order, error) {
 	res, err := Orders(sid, canteen)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var resPicked [][]order = deepCopyOrders(res)
 
 	filters, err := resolvers.GetFilters(&userHash)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// score and compare orders by filters within each order table
-	for i := range res {
-		for j := range res[i] {
-			order := &res[i][j]
+	for i := range resPicked {
+		for j := range resPicked[i] {
+			order := &resPicked[i][j]
 
 			if strings.HasSuffix(order.Omezeni, "B") {
 				continue
@@ -45,7 +57,7 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 
 			orderingTimeCheck, err := CheckOrderingTime(order.CasKonec)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 
 			if !orderingTimeCheck {
@@ -70,50 +82,51 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, error) 
 		}
 	}
 
-	for i := range res {
-		if len(res[i]) > 1 {
+	for i := range resPicked {
+		if len(resPicked[i]) > 1 {
 			highestScoreIdx := 0
 
 			// rank
-			for j := 1; j < len(res[i]); j++ {
-				orderingTimeCheck, err := CheckOrderingTime(res[i][j].CasKonec)
+			for j := 1; j < len(resPicked[i]); j++ {
+				orderingTimeCheck, err := CheckOrderingTime(resPicked[i][j].CasKonec)
 				if err != nil {
-					return nil, err
+					return nil, nil, err
 				}
 
 				if !orderingTimeCheck {
 					continue
 				}
 
-				if res[i][j].Score > res[i][highestScoreIdx].Score {
+				if resPicked[i][j].Score > resPicked[i][highestScoreIdx].Score {
 					highestScoreIdx = j
 				}
 			}
 
 			// set amount to 0 for all other orders
-			for j := 0; j < len(res[i]); j++ {
+			for j := 0; j < len(resPicked[i]); j++ {
 				if j != highestScoreIdx {
-					res[i][j].Pocet = 0
+					resPicked[i][j].Pocet = 0
 				}
 			}
 
 			// order the order if there is a positive score and it is the highest score in the orderTable
-			if res[i][highestScoreIdx].Score >= 0 {
-				orderingTimeCheck, err := CheckOrderingTime(res[i][highestScoreIdx].CasKonec)
+			if resPicked[i][highestScoreIdx].Score >= 0 {
+				orderingTimeCheck, err := CheckOrderingTime(resPicked[i][highestScoreIdx].CasKonec)
 				if err != nil {
-					return nil, err
+					return nil, nil, err
 				}
 
 				if !orderingTimeCheck {
 					continue
 				}
 
-				res[i][highestScoreIdx].Pocet = 1
+				resPicked[i][highestScoreIdx].Pocet = 1
 			} else {
-				res[i][highestScoreIdx].Pocet = 0
+				resPicked[i][highestScoreIdx].Pocet = 0
 			}
 		}
 	}
 
-	return res, nil
+	fmt.Println(reflect.DeepEqual(res, resPicked))
+	return resPicked, res, nil
 }
