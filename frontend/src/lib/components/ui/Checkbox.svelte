@@ -3,7 +3,7 @@
 	import { Checkbox, Label, type CustomEventHandler } from 'bits-ui';
 
 	interface Props {
-		checked: boolean | 'indeterminate' | undefined;
+		checked: boolean | undefined;
 		label?: string;
 		className?: string;
 		onclick?: (e: CustomEventHandler<MouseEvent, HTMLButtonElement>) => void;

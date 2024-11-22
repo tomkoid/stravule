@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { addFilter, removeFilter } from '$lib/api/filters';
+	import { loadOrders } from '$lib/api/orders';
+	import { pickOrders } from '$lib/stores/page.svelte';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
 	import { Dialog } from 'bits-ui';
@@ -68,6 +70,11 @@
 									dialogShown = false;
 
 									await removeFilter(editFilter);
+
+									if (pickOrders.value == true) {
+										pickOrders.value = false;
+										pickOrders.value = true;
+									}
 								}}
 							>
 								Ano
@@ -115,6 +122,11 @@
 				// add filter to the list
 				filters = [...filters!, newFilter];
 				newFilter = '';
+
+				if (pickOrders.value == true) {
+					pickOrders.value = false;
+					pickOrders.value = true;
+				}
 			} catch (_) {}
 			transactionHappening = false;
 		}}

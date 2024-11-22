@@ -4,6 +4,7 @@
 	import { loadOrders } from '$lib/api/orders';
 	import { sendOrders } from '$lib/api/orders';
 	import { loadFilters } from '$lib/api/filters';
+	import { pickOrders } from '$lib/stores/page.svelte';
 	import type { Order } from '$lib/api/orders';
 	import type { Filters } from '$lib/api/filters';
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
@@ -16,7 +17,7 @@
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
 	let selected: any | boolean[][] | undefined = $state();
-	let pickOrders: any = $state(false);
+	// let pickOrders: any = $state(false);
 
 	let filterTabOpened = $state(false);
 
@@ -36,7 +37,7 @@
 		orders = await loadOrders(
 			localStorage.getItem('sid')!,
 			localStorage.getItem('canteen')!,
-			pickOrders
+			pickOrders.value
 		);
 		filters = await loadFilters();
 		renderOrders(orders);
@@ -45,12 +46,14 @@
 
 	$effect(() => {
 		if (!mountOrdersLoaded) return;
-		loadOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!, pickOrders).then(
-			(ordersFetched) => {
-				orders = ordersFetched;
-				renderOrders(ordersFetched);
-			}
-		);
+		loadOrders(
+			localStorage.getItem('sid')!,
+			localStorage.getItem('canteen')!,
+			pickOrders.value
+		).then((ordersFetched) => {
+			orders = ordersFetched;
+			renderOrders(ordersFetched);
+		});
 	});
 
 	const checkIfAfterNow = (timeString: string) => {
@@ -64,7 +67,7 @@
 	<div class="flex gap-2">
 		<Checkbox
 			className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
-			bind:checked={pickOrders}
+			bind:checked={pickOrders.value}
 			label="Zobrazit vybrané obědy od Stravule"
 		/>
 	</div>
@@ -85,11 +88,11 @@
 		</Collapsible.Content>
 	</Collapsible.Root>
 
-	{#if pickOrders}
+	{#if pickOrders.value}
 		<button
 			onclick={async () => {
 				await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
-				pickOrders = false;
+				pickOrders.value = false;
 			}}
 			class="flex flex-row items-center gap-1 px-2 py-1 w-fit rounded bg-ctp-green text-base transition-all hover:rounded-xl"
 		>

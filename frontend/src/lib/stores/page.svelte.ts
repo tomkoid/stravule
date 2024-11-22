@@ -8,3 +8,15 @@ export const pageLoading = {
     _rune = newVal
   }
 }
+
+
+let _pickOrdersRune: boolean = $state(false)
+
+export const pickOrders = {
+  get value() {
+    return _pickOrdersRune
+  },
+  set value(newVal) {
+    _pickOrdersRune = newVal
+  }
+}
