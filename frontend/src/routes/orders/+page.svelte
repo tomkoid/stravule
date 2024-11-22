@@ -13,6 +13,7 @@
 	import { slide } from 'svelte/transition';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
+	import { PUBLIC_BACKEND_URL } from '$env/static/public';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
@@ -162,4 +163,5 @@
 
 <svelte:head>
 	<title>Stravule - Objednávky</title>
+	<link rel="preconnect" href={PUBLIC_BACKEND_URL} />
 </svelte:head>

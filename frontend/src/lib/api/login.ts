@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/public"
+import { PUBLIC_BACKEND_URL } from "$env/static/public"
 
 interface LoginResponse {
   canteen: number,
@@ -12,7 +12,7 @@ export async function login(username: string, password: string, canteen: string)
   params.append("username", username)
   params.append("password", password)
   params.append("canteen", canteen)
-  let req = await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/login?${params.toString()}`, {
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/login?${params.toString()}`, {
     method: "POST",
   })
 

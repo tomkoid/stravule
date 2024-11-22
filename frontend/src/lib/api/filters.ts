@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/public';
+import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import { errors } from '$lib/stores/errors.svelte';
 
 export interface Filters {
@@ -11,7 +11,7 @@ export async function loadFilters(): Promise<Filters> {
   let params = new URLSearchParams()
 
   params.append("user_hash", localStorage.getItem("user_hash")!)
-  let req = await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
     method: "GET",
   })
 
@@ -29,7 +29,7 @@ export async function addFilter(filterString: string, category: string): Promise
   let params = new URLSearchParams()
 
   params.append("user_hash", localStorage.getItem("user_hash")!)
-  let req = await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export async function removeFilter(filterString: string): Promise<Filters> {
   let params = new URLSearchParams()
 
   params.append("user_hash", localStorage.getItem("user_hash")!)
-  let req = await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters?${params.toString()}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

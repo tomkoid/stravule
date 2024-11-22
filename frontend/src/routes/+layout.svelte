@@ -6,8 +6,6 @@
 	import { onMount } from 'svelte';
 	import { pageLoading } from '$lib/stores/page.svelte';
 
-	import { env } from '$env/dynamic/public';
-
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
 	import Icon from '@iconify/svelte';
 	import Errors from '$lib/components/layout/Errors.svelte';
@@ -43,10 +41,6 @@
 <div hidden={!pageLoading.value}>
 	<RouteLoader />
 </div>
-
-<svelte:head>
-	<link rel="preconnect" href={env.PUBLIC_BACKEND_URL} />
-</svelte:head>
 
 <div
 	class="flex md:flex-row flex-col bg-crust bg-opacity-75 backdrop-blur-sm shadow shadow-crust justify-center md:justify-between items-center gap-6 md:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-20 md:px-10 lg:px-20 xl:px-40"

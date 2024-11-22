@@ -2,6 +2,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+ARG PUBLIC_BACKEND_URL 
+ENV PUBLIC_BACKEND_URL=$PUBLIC_BACKEND_URL
+
 COPY package*.json .
 RUN npm install --verbose
 
@@ -12,7 +15,6 @@ COPY tailwind.config.ts .
 COPY tsconfig.json .
 COPY vite.config.ts .
 COPY .svelte-kit .
-COPY .env .
 
 COPY ./static /app/static
 COPY ./src /app/src
