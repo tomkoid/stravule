@@ -60,5 +60,7 @@
 
 	.error {
 		animation: slideDown 0.3s ease-in-out;
+		// end animation
+		animation-direction: alternate;
 	}
 </style>
