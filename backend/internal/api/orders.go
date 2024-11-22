@@ -90,7 +90,6 @@ func Orders(sid string, canteen string) ([][]order, error) {
 			panic("xd")
 		}
 		bodyString := string(bodyBytes)
-		// fmt.Println(bodyString)
 		_ = bodyString
 
 		if res.StatusCode == 555 {
