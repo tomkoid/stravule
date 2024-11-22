@@ -25,6 +25,8 @@ func StartServer() {
 	apiV1 := e.Group("/api/v1")
 	initAPI(apiV1)
 
+	e.GET("/", indexHandler)
+
 	host := ":1323"
 	if os.Getenv("HOST") != "" {
 		host = os.Getenv("HOST")
