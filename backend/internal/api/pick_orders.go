@@ -120,6 +120,11 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 					continue
 				}
 
+				// don't apply if order can't be picked
+				if strings.HasSuffix(resPicked[i][highestScoreIdx].Omezeni, "B") {
+					continue
+				}
+
 				resPicked[i][highestScoreIdx].Pocet = 1
 			} else {
 				resPicked[i][highestScoreIdx].Pocet = 0
