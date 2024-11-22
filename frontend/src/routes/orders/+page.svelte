@@ -108,14 +108,16 @@
 					<div
 						class="flex flex-col-reverse gap-2 justify-between bg-surface0 border border-surface1 rounded-xl p-3"
 					>
-						<div class="flex flex-col gap-1">
+						<div class="flex flex-col">
 							{#each orderTable as order, orderIndex}
-								<div class="flex flex-nowrap flex-row items-center gap-3">
+								<div
+									class={`flex flex-nowrap flex-row items-center transition-all gap-3 p-[6px] ${selected[orderTableIndex][orderIndex] ? 'bg-selected-order rounded-xl' : ''}`}
+								>
 									<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
 									<!-- <input type="radio" bind:group={sel} /> -->
 									{#if order.omezeni.endsWith('E')}
 										<Checkbox
-											className={`size-[28px] rounded-md shadow shadow-surface0 bg-surface1 data-[state=unchecked]:bg-surface1 data-[state=checked]:hover:bg-crust ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
+											className={`size-[28px] rounded-md bg-selected-order-checkbox data-[state=unchecked]:bg-surface1 data-[state=unchecked]:disabled:bg-surface01 data-[state=checked]:hover:bg-selected-order-checkbox-hover ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
 											onclick={() => {
 												if (selected) {
 													for (let item in selected[orderTableIndex]) {
@@ -137,9 +139,7 @@
 										<div class="ml-[28px]"></div>
 									{/if}
 									<div
-										class="flex flex-wrap flex-row break-all"
-										class:text-subtext1={!checkIfAfterNow(order.casKonec) ||
-											order.omezeni.endsWith('B')}
+										class={`flex flex-wrap flex-row break-all ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text' : ''}`}
 									>
 										{order.id + 1}. {order.nazev}
 									</div>
