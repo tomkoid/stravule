@@ -106,7 +106,7 @@
 			{#each orders as orderTable, orderTableIndex}
 				{#if orderTable}
 					<div
-						class="flex flex-col-reverse md:flex-row gap-2 md:gap-4 justify-between bg-surface0 border border-surface1 rounded-xl p-3"
+						class="flex flex-col-reverse gap-2 justify-between bg-surface0 border border-surface1 rounded-xl p-3"
 					>
 						<div class="flex flex-col gap-1">
 							{#each orderTable as order, orderIndex}
@@ -147,7 +147,7 @@
 							{/each}
 						</div>
 						<div>
-							<p class="text-text md:text-subtext0 text-xl md:text-base font-bold md:font-normal">
+							<p class="text-text text-xl font-bold">
 								{orderTable[0].datum}
 							</p>
 						</div>
