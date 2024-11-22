@@ -27,7 +27,6 @@
 		for (let i = 0; i < orders.length; i++) {
 			selected[i] = new Array(orders[i].length).fill(false);
 			for (let j = 0; j < orders[i].length; j++) {
-				console.log(i, j);
 				selected[i][j] = orders[i][j].pocet == 1;
 			}
 		}

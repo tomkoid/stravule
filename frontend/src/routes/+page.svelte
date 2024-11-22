@@ -37,7 +37,6 @@
 					goto('/orders');
 				})
 				.catch((e) => {
-					console.log(typeof e);
 					if (typeof e === 'string') {
 						errorMessage = e;
 					} else if (e instanceof Error) {
