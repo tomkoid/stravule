@@ -29,7 +29,7 @@
 	<input class="login-input" type="password" placeholder="Heslo" bind:value={password} />
 	<input class="login-input" placeholder="Jídelna" bind:value={canteen} />
 	<button
-		class="bg-blue text-base shadow-blue rounded-xl mt-5 p-2"
+		class="bg-sblue text-base shadow-sblue rounded-xl mt-5 p-2"
 		onclick={() => {
 			errorMessage = '';
 			login(username, password, canteen)
