@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { addFilter, removeFilter } from '$lib/api/filters';
-	import { loadOrders } from '$lib/api/orders';
+	import { errors } from '$lib/stores/errors.svelte';
 	import { pickOrders } from '$lib/stores/page.svelte';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
@@ -127,7 +127,10 @@
 					pickOrders.value = false;
 					pickOrders.value = true;
 				}
-			} catch (_) {}
+			} catch (e: any) {
+				errors.add(e);
+				transactionHappening = false;
+			}
 			transactionHappening = false;
 		}}
 	>

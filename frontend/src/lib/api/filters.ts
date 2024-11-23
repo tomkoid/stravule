@@ -41,8 +41,8 @@ export async function addFilter(filterString: string, category: string): Promise
   })
 
   if (req.status != 200) {
-    errors.add(await req.text())
-    throw new Error(await req.text())
+    const reqText = await req.text()
+    throw new Error(reqText)
   }
 
   let data: Filters = await req.json()
