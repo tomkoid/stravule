@@ -11,7 +11,7 @@ import (
 func StartServer() {
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "[${method} ${uri} ${status}]\n",
+		Format: "[${remote_ip}] ${method} ${status} ${path} ${latency_human} IN:${bytes_in}B OUT:${bytes_out}B\n",
 	}))
 	e.Use(middleware.BodyLimit("6M"))
 	e.Use(middleware.CORS())
