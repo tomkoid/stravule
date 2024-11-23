@@ -10,15 +10,14 @@
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 	import { Collapsible } from 'bits-ui';
 	import * as FiltersList from '$lib/components/orders/filters/index';
+	import OrderList from '$lib/components/orders/orderList.svelte';
 	import { slide } from 'svelte/transition';
-	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
 	import { PUBLIC_BACKEND_URL } from '$env/static/public';
 
 	let orders: Order[][] | undefined = $state();
 	let filters: Filters | undefined = $state();
 	let selected: any | boolean[][] | undefined = $state();
-	// let pickOrders: any = $state(false);
 
 	let filterTabOpened = $state(false);
 
@@ -55,12 +54,6 @@
 			renderOrders(ordersFetched);
 		});
 	});
-
-	const checkIfAfterNow = (timeString: string) => {
-		const givenTime = new Date(timeString);
-		const now = new Date();
-		return givenTime > now;
-	};
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
@@ -102,59 +95,7 @@
 	{/if}
 
 	{#if orders && selected}
-		<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
-			{#each orders as orderTable, orderTableIndex}
-				{#if orderTable}
-					<div
-						class="flex flex-col-reverse gap-2 justify-between bg-surface0 border border-surface1 rounded-xl p-3"
-					>
-						<div class="flex flex-col">
-							{#each orderTable as order, orderIndex}
-								<div
-									class={`flex flex-nowrap flex-row items-center transition-all gap-3 p-[6px] ${selected[orderTableIndex][orderIndex] ? 'bg-selected-order rounded-xl' : ''}`}
-								>
-									<!-- <input type="radio" name={orderTableIndex.toString()} bind:group={sel} /> -->
-									<!-- <input type="radio" bind:group={sel} /> -->
-									{#if order.omezeni.endsWith('E')}
-										<Checkbox
-											className={`size-[28px] rounded-md bg-selected-order-checkbox data-[state=unchecked]:bg-surface1 data-[state=unchecked]:disabled:bg-surface01 data-[state=checked]:hover:bg-selected-order-checkbox-hover ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
-											onclick={() => {
-												if (selected) {
-													for (let item in selected[orderTableIndex]) {
-														if (
-															selected[orderTableIndex][item] !=
-															selected[orderTableIndex][orderIndex]
-														) {
-															selected[orderTableIndex][item] = false;
-														}
-													}
-												} else {
-													console.log('something really bad happened');
-												}
-											}}
-											bind:checked={selected[orderTableIndex][orderIndex]}
-											disabled={!checkIfAfterNow(order.casKonec)}
-										/>
-									{:else}
-										<div class="ml-[28px]"></div>
-									{/if}
-									<div
-										class={`flex flex-wrap flex-row break-all ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text' : ''}`}
-									>
-										{order.id + 1}. {order.nazev}
-									</div>
-								</div>
-							{/each}
-						</div>
-						<div>
-							<p class="text-text text-xl font-bold">
-								{orderTable[0].datum}
-							</p>
-						</div>
-					</div>
-				{/if}
-			{/each}
-		</div>
+		<OrderList {orders} {selected} />
 	{:else}
 		<p>Načítání obědů..</p>
 	{/if}
