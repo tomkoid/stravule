@@ -9,12 +9,10 @@
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
 	import Icon from '@iconify/svelte';
 	import Errors from '$lib/components/layout/Errors.svelte';
-	import { redirect } from '@sveltejs/kit';
 
 	let { children } = $props();
 
 	let loggedIn: boolean = $state(false);
-	// let pageLoading: boolean = $state(false);
 
 	function refreshLoginStatus() {
 		localStorage.getItem('sid') ? (loggedIn = true) : (loggedIn = false);
