@@ -9,6 +9,7 @@
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
 	import Icon from '@iconify/svelte';
 	import Errors from '$lib/components/layout/Errors.svelte';
+	import { redirect } from '@sveltejs/kit';
 
 	let { children } = $props();
 
@@ -19,12 +20,17 @@
 		localStorage.getItem('sid') ? (loggedIn = true) : (loggedIn = false);
 	}
 
+	function isLoggedIn() {
+		return localStorage.getItem('sid') ? true : false;
+	}
+
 	onMount(() => {
 		if (localStorage) refreshLoginStatus();
 	});
 
 	$effect(() => {
 		if ($navigating) refreshLoginStatus();
+		if (!isLoggedIn() && window.location.pathname != '/') window.location.href = '/';
 	});
 
 	beforeNavigate(() => {
