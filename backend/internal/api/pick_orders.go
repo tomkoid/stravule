@@ -132,6 +132,5 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 		}
 	}
 
-	fmt.Println(reflect.DeepEqual(res, resPicked))
 	return resPicked, res, nil
 }
