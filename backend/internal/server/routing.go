@@ -16,6 +16,7 @@ func initAPI(e *echo.Group) error {
 
 	e.POST("/login", routes.Login)
 	scuh.GET("/orders", routes.Orders)
+	scuh.GET("/account_info", routes.AccountInfo)
 	scuh.POST("/save_orders", routes.SendOrders)
 	uh.GET("/filters", routes.ListFilters)
 	uh.POST("/filters", routes.AddFilter)
