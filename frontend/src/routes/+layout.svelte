@@ -1,13 +1,15 @@
 <script lang="ts">
 	import '../app.css';
 
-	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { pageLoading } from '$lib/stores/page.svelte';
 
+	import { getUserInfo } from '$lib/api/user_info';
+
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
-	import Icon from '@iconify/svelte';
+	import Navbar from '$lib/components/layout/Navbar.svelte';
 	import Errors from '$lib/components/layout/Errors.svelte';
 
 	let { children } = $props();
@@ -22,12 +24,25 @@
 		return localStorage.getItem('sid') ? true : false;
 	}
 
-	onMount(() => {
-		if (localStorage) refreshLoginStatus();
+	onMount(async () => {
+		if (localStorage) {
+			refreshLoginStatus();
+
+			if (!localStorage.getItem('jmeno') && loggedIn) {
+				await getUserInfo(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+				console.log('reloading web page after getting user info');
+
+				window.location.reload();
+			}
+		}
 	});
 
 	$effect(() => {
-		if ($navigating) refreshLoginStatus();
+		if ($navigating) {
+			if (localStorage) {
+				refreshLoginStatus();
+			}
+		}
 		if (!isLoggedIn() && window.location.pathname != '/') window.location.href = '/';
 	});
 
@@ -46,23 +61,7 @@
 	<RouteLoader />
 </div>
 
-<div
-	class="flex md:flex-row flex-col bg-crust bg-opacity-75 backdrop-blur-sm shadow shadow-crust justify-center md:justify-between items-center gap-6 md:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-20 md:px-10 lg:px-20 xl:px-40"
->
-	<p class="font-bold text-2xl">Stravule</p>
-	{#if loggedIn}
-		<button
-			class="hover:text-blue transition flex items-center justify-center text-center gap-2"
-			onclick={() => {
-				localStorage.removeItem('sid');
-				goto('/');
-			}}
-		>
-			<Icon icon="mdi:logout" />
-			Odhlásit se</button
-		>
-	{/if}
-</div>
+<Navbar bind:loggedIn />
 
 <div class="mb-5 mx-5 md:mx-10 lg:mx-20 xl:mx-40">
 	{@render children()}

@@ -87,7 +87,7 @@ func Orders(sid string, canteen string) ([][]order, error) {
 		// read body
 		bodyBytes, err = io.ReadAll(res.Body)
 		if err != nil {
-			panic("xd")
+			return nil, err
 		}
 		bodyString := string(bodyBytes)
 		_ = bodyString

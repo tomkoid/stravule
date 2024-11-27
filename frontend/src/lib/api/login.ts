@@ -1,4 +1,5 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public"
+import { getUserInfo } from "./user_info"
 
 interface LoginResponse {
   canteen: number,
@@ -30,4 +31,6 @@ export async function login(username: string, password: string, canteen: string)
 
   localStorage.setItem("username", username)
   localStorage.setItem("password", password)
+
+  await getUserInfo(data.sid.toString(), data.canteen.toString())
 }
