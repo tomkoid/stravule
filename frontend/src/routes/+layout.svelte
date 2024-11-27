@@ -1,10 +1,12 @@
 <script lang="ts">
 	import '../app.css';
 
-	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { pageLoading } from '$lib/stores/page.svelte';
+
+	import { getUserInfo } from '$lib/api/user_info';
 
 	import RouteLoader from '$lib/components/layout/RouteLoader.svelte';
 	import Icon from '@iconify/svelte';
@@ -24,12 +26,25 @@
 		return localStorage.getItem('sid') ? true : false;
 	}
 
-	onMount(() => {
-		if (localStorage) refreshLoginStatus();
+	onMount(async () => {
+		if (localStorage) {
+			refreshLoginStatus();
+
+			if (!localStorage.getItem('jmeno') && loggedIn) {
+				await getUserInfo(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+				console.log('reloading web page after getting user info');
+
+				window.location.reload();
+			}
+		}
 	});
 
 	$effect(() => {
-		if ($navigating) refreshLoginStatus();
+		if ($navigating) {
+			if (localStorage) {
+				refreshLoginStatus();
+			}
+		}
 		if (!isLoggedIn() && window.location.pathname != '/') window.location.href = '/';
 	});
 
@@ -55,7 +70,7 @@
 >
 	<p class="font-bold text-2xl">Stravule</p>
 
-	{#if loggedIn}
+	{#if loggedIn && localStorage.getItem('jmeno')}
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				<button
@@ -70,7 +85,7 @@
 							><Icon width={24} icon="mdi:user" /></Avatar.Image
 						>
 					</Avatar.Root>
-					<p class="text-inherit">Matous Svoboda</p>
+					<p class="text-inherit">{localStorage.getItem('jmeno')}</p>
 				</button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content
