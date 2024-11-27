@@ -15,7 +15,10 @@
 <div
 	class="flex mbl:flex-row flex-col bg-crust bg-opacity-75 backdrop-blur-sm shadow shadow-crust justify-center mbl:justify-between items-center gap-6 mbl:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-6 sm:px-8 md:px-10 lg:px-20 xl:px-40"
 >
-	<p class="font-bold text-2xl">Stravule</p>
+	<div class="flex flex-row items-center gap-2">
+		<img src="/favicon.png" alt="Stravule" class="w-8 h-8" />
+		<p class="font-bold text-2xl">STRAVULE</p>
+	</div>
 
 	{#if loggedIn && localStorage.getItem('jmeno')}
 		<DropdownMenu.Root>
