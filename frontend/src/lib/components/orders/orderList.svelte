@@ -53,7 +53,7 @@
 								<div class="ml-[28px]"></div>
 							{/if}
 							<div
-								class={`flex flex-wrap flex-row break-all ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text' : ''}`}
+								class={`flex flex-wrap flex-row break ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text font-medium' : ''}`}
 							>
 								{order.id + 1}. {order.nazev}
 							</div>
