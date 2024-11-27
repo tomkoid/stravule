@@ -103,6 +103,17 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 
 			// set amount to 0 for all other orders
 			for j := 0; j < len(resPicked[i]); j++ {
+				orderingTimeCheck, err := CheckOrderingTime(resPicked[i][highestScoreIdx].CasKonec)
+				if err != nil {
+					return nil, nil, err
+				}
+
+				// if ordering time is expired, don't modify
+				if !orderingTimeCheck {
+					resPicked[i][j].Pocet = res[i][j].Pocet
+					continue
+				}
+
 				if j != highestScoreIdx {
 					resPicked[i][j].Pocet = 0
 				}
