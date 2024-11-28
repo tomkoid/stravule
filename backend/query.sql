@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT * FROM users
+SELECT id, user_hash, sid, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1;
 
 -- name: CreateUser :one
@@ -27,3 +27,8 @@ DELETE FROM filters
 WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
   AND filter_text = $2
   AND category = $3;
+
+-- name: RegisterBetatester :exec
+UPDATE users
+SET is_beta_tester = true
+WHERE user_hash = $1;
