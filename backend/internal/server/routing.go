@@ -1,6 +1,7 @@
 package server
 
 import (
+	"codeberg.org/tomkoid/stravule/backend/internal/config"
 	"codeberg.org/tomkoid/stravule/backend/internal/routes"
 	"codeberg.org/tomkoid/stravule/backend/internal/server/middleware"
 	"github.com/labstack/echo/v4"
@@ -21,6 +22,11 @@ func initAPI(e *echo.Group) error {
 	uh.GET("/filters", routes.ListFilters)
 	uh.POST("/filters", routes.AddFilter)
 	uh.DELETE("/filters", routes.RemoveFilter)
+
+	// betatester stuff
+	if config.Cfg.BetatestersOnly {
+		uh.POST("/betatester", routes.RegisterBetatester)
+	}
 
 	return nil
 }

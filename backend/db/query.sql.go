@@ -33,21 +33,20 @@ func (q *Queries) AddFilter(ctx context.Context, arg AddFilterParams) error {
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    user_hash, sid, is_beta_tester
+    user_hash, sid
 ) VALUES (
-    $1, $2, $3
+    $1, $2
 )
 RETURNING id, user_hash, sid, is_beta_tester
 `
 
 type CreateUserParams struct {
-	UserHash     string
-	Sid          string
-	IsBetaTester bool
+	UserHash string
+	Sid      string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.UserHash, arg.Sid, arg.IsBetaTester)
+	row := q.db.QueryRow(ctx, createUser, arg.UserHash, arg.Sid)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -122,4 +121,15 @@ func (q *Queries) ListFilters(ctx context.Context, userHash string) ([]Filter, e
 		return nil, err
 	}
 	return items, nil
+}
+
+const registerBetatester = `-- name: RegisterBetatester :exec
+UPDATE users
+SET is_beta_tester = true
+WHERE user_hash = $1
+`
+
+func (q *Queries) RegisterBetatester(ctx context.Context, userHash string) error {
+	_, err := q.db.Exec(ctx, registerBetatester, userHash)
+	return err
 }
