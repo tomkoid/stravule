@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 
 	"log"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/config"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -18,7 +18,7 @@ import (
 var DB *db.Queries
 
 func InitDB() error {
-	dbUrl := os.Getenv("DATABASE_URL")
+	dbUrl := config.Cfg.DatabaseURL
 
 	// migrations
 	m, err := migrate.New(

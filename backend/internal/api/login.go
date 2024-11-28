@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
+	"codeberg.org/tomkoid/stravule/backend/internal/config"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
 	"codeberg.org/tomkoid/stravule/backend/internal/utils"
 )
@@ -132,11 +132,11 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 			log.Println("db: created new user with hash", userHash)
 		}
 
-		if os.Getenv("BETATESTERS_ONLY") == "true" && !newUser.IsBetaTester {
+		if config.Cfg.BetatestersOnly && !newUser.IsBetaTester {
 			return nil, errors.New(betatesterErrorMsg)
 		}
 	} else {
-		if os.Getenv("BETATESTERS_ONLY") == "true" && !user.IsBetaTester {
+		if config.Cfg.BetatestersOnly && !user.IsBetaTester {
 			return nil, errors.New(betatesterErrorMsg)
 		}
 	}

@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/cache"
+	"codeberg.org/tomkoid/stravule/backend/internal/config"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
 	"codeberg.org/tomkoid/stravule/backend/internal/server"
 	"github.com/joho/godotenv"
@@ -16,12 +16,15 @@ func main() {
 		log.Println("env: error loading .env file")
 	}
 
+	// load config into config.Cfg
+	config.LoadConfig()
+
 	err = database.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	redisUrl := os.Getenv("REDIS_URL")
+	redisUrl := config.Cfg.RedisURL
 	if redisUrl != "" {
 		cache.InitRedis(redisUrl)
 	}
