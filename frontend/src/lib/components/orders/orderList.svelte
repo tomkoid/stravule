@@ -33,7 +33,7 @@
 							<!-- <input type="radio" bind:group={sel} /> -->
 							{#if order.omezeni.endsWith('E')}
 								<Checkbox
-									className={`size-[28px] rounded-md bg-selected-order-checkbox data-[state=unchecked]:bg-surface1 data-[state=unchecked]:disabled:bg-surface01 data-[state=checked]:hover:bg-selected-order-checkbox-hover ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : ''}`}
+									className={`size-[28px] rounded-md bg-selected-order-checkbox data-[state=unchecked]:bg-surface1 data-[state=unchecked]:disabled:bg-surface01 data-[state=checked]:hover:bg-selected-order-checkbox-hover ${checkIfAfterNow(order.casKonec) ? 'data-[state=unchecked]:hover:bg-surface2' : 'data-[state=checked]:hover:bg-selected-order-checkbox'}`}
 									onclick={() => {
 										if (selected) {
 											for (let item in selected[orderTableIndex]) {
