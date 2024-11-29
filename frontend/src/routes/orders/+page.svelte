@@ -10,6 +10,7 @@
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 	import { Collapsible } from 'bits-ui';
 	import * as FiltersList from '$lib/components/orders/filters/index';
+	import * as Settings from '$lib/components/orders/settings/index';
 	import OrderList from '$lib/components/orders/orderList.svelte';
 	import { slide } from 'svelte/transition';
 	import Icon from '@iconify/svelte';
@@ -74,10 +75,13 @@
 					<Icon class="text-xl" icon="mdi:caret" />
 				{/if}
 			</div>
-			<p>Filtrování</p>
+			<p>Nastavení obědů</p>
 		</Collapsible.Trigger>
 		<Collapsible.Content class="mt-2" transition={slide}>
-			<FiltersList.Root {filters} />
+			<Settings.Root>
+				<FiltersList.Root {filters} />
+				<Settings.DayExceptions />
+			</Settings.Root>
 		</Collapsible.Content>
 	</Collapsible.Root>
 
