@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT id, user_hash, sid, is_beta_tester FROM users
+SELECT id, user_hash, sid, order_days_exceptions, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1;
 
 -- name: CreateUser :one
@@ -31,4 +31,15 @@ WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
 -- name: RegisterBetatester :exec
 UPDATE users
 SET is_beta_tester = true
+WHERE user_hash = $1;
+
+-- name: AddWeekdayOrderingException :exec
+UPDATE users
+SET order_days_exceptions = array_append(order_days_exceptions, $2)
+WHERE user_hash = $1;
+
+
+-- name: RemoveWeekdayOrderingException :exec
+UPDATE users
+SET order_days_exceptions = array_remove(order_days_exceptions, $2)
 WHERE user_hash = $1;

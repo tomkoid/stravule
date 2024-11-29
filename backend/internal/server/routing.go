@@ -22,6 +22,8 @@ func initAPI(e *echo.Group) error {
 	uh.GET("/filters", routes.ListFilters)
 	uh.POST("/filters", routes.AddFilter)
 	uh.DELETE("/filters", routes.RemoveFilter)
+	uh.POST("/order_day_exception", routes.AddOrderDayException)
+	uh.DELETE("/order_day_exception", routes.RemoveOrderDayException)
 
 	// betatester stuff
 	if config.Cfg.BetatestersOnly {
