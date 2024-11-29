@@ -4,7 +4,7 @@
 	import { listOrderDayExceptions, setOrderDayException } from '$lib/api/orders';
 	import { pickOrders } from '$lib/stores/page.svelte';
 
-	const days = ['Po', 'Ut', 'St', 'Ct', 'Pa', 'So', 'Ne'];
+	const days = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 	const daysValue = ['1', '2', '3', '4', '5', '6', '0'];
 	let daysChecked: boolean[] = $state([]);
 
