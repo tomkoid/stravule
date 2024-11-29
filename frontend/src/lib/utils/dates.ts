@@ -19,6 +19,6 @@ export function parseDate(dateString: string): Date {
 }
 
 export function getWeekday(date: Date) {
-  const days = ["Neděle", "Ponděli", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
+  const days = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
   return days[date.getDay()];
 }
