@@ -18,16 +18,16 @@
 	let confirmButton: HTMLButtonElement;
 
 	let transactionHappening = false;
-	let dialogShown = $state(false);
+	let dialogShown: boolean[] = $state(new Array(filters!.length).fill(false));
 	let editFilter = $state(''); // what filter to remove state
 </script>
 
 {#if filters}
-	{#each filters as filter}
+	{#each filters as filter, i}
 		<div class="flex flex-row items-center gap-1">
 			<p class="text">{filter}</p>
 
-			<Dialog.Root bind:open={dialogShown}>
+			<Dialog.Root bind:open={dialogShown[i]}>
 				<Dialog.Trigger onclick={() => (editFilter = filter)}>
 					<Icon icon="material-symbols:delete" />
 				</Dialog.Trigger>
@@ -35,7 +35,7 @@
 					<Dialog.Overlay
 						transition={fade}
 						transitionConfig={{ duration: 150 }}
-						class="fixed inset-0 z-50 bg-black/10"
+						class={`fixed inset-0 z-50 bg-black/70`}
 					/>
 					<Dialog.Content
 						transition={flyAndScale}
@@ -51,7 +51,7 @@
 						<div class="flex flex-row items-center justify-center gap-2 h-12">
 							<button
 								class="bg-surface0 hover:bg-surface1 transition-all rounded hover:rounded-lg flex flex-row items-center justify-center gap-1 px-2 h-full w-full"
-								onclick={() => (dialogShown = false)}
+								onclick={() => (dialogShown[i] = false)}
 							>
 								Ne
 							</button>
@@ -67,7 +67,7 @@
 									if (!localStorage.getItem('canteen'))
 										console.error('canteen not found in localStorage while removing filter');
 
-									dialogShown = false;
+									dialogShown[i] = false;
 
 									await removeFilter(editFilter);
 
