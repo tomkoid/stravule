@@ -70,3 +70,37 @@ export async function sendOrders(sid: string, canteen: string) {
 
   pageLoading.value = false;
 }
+
+export async function listOrderDayExceptions(): Promise<number[]> {
+  let params = new URLSearchParams()
+
+  params.append("user_hash", localStorage.getItem("user_hash")!)
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/order_day_exceptions?${params.toString()}`, {
+    method: "GET",
+  })
+
+  if (req.status != 200) {
+    errors.add(await req.text())
+    throw new Error(await req.text())
+  }
+
+  let res: number[] = await req.json()
+
+  return res
+}
+
+export async function setOrderDayException(value: boolean, weekday: number) {
+  let params = new URLSearchParams()
+
+  params.append("user_hash", localStorage.getItem("user_hash")!)
+  params.append("week_day", weekday.toString())
+
+  const req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/order_day_exception?${params.toString()}`, {
+    method: value ? "POST" : "DELETE",
+  })
+
+  if (req.status != 200) {
+    errors.add(await req.text())
+    throw new Error(await req.text())
+  }
+}

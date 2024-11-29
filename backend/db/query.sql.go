@@ -31,13 +31,29 @@ func (q *Queries) AddFilter(ctx context.Context, arg AddFilterParams) error {
 	return err
 }
 
+const addWeekdayOrderingException = `-- name: AddWeekdayOrderingException :exec
+UPDATE users
+SET order_days_exceptions = array_append(order_days_exceptions, $2)
+WHERE user_hash = $1
+`
+
+type AddWeekdayOrderingExceptionParams struct {
+	UserHash    string
+	ArrayAppend interface{}
+}
+
+func (q *Queries) AddWeekdayOrderingException(ctx context.Context, arg AddWeekdayOrderingExceptionParams) error {
+	_, err := q.db.Exec(ctx, addWeekdayOrderingException, arg.UserHash, arg.ArrayAppend)
+	return err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
     user_hash, sid
 ) VALUES (
     $1, $2
 )
-RETURNING id, user_hash, sid, is_beta_tester
+RETURNING id, user_hash, sid, is_beta_tester, order_days_exceptions
 `
 
 type CreateUserParams struct {
@@ -53,6 +69,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.UserHash,
 		&i.Sid,
 		&i.IsBetaTester,
+		&i.OrderDaysExceptions,
 	)
 	return i, err
 }
@@ -76,17 +93,26 @@ func (q *Queries) DeleteFilter(ctx context.Context, arg DeleteFilterParams) erro
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_hash, sid, is_beta_tester FROM users
+SELECT id, user_hash, sid, order_days_exceptions, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, userHash string) (User, error) {
+type GetUserRow struct {
+	ID                  int32
+	UserHash            string
+	Sid                 string
+	OrderDaysExceptions []int32
+	IsBetaTester        bool
+}
+
+func (q *Queries) GetUser(ctx context.Context, userHash string) (GetUserRow, error) {
 	row := q.db.QueryRow(ctx, getUser, userHash)
-	var i User
+	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.UserHash,
 		&i.Sid,
+		&i.OrderDaysExceptions,
 		&i.IsBetaTester,
 	)
 	return i, err
@@ -123,6 +149,16 @@ func (q *Queries) ListFilters(ctx context.Context, userHash string) ([]Filter, e
 	return items, nil
 }
 
+const listWeekdayOrderingExceptions = `-- name: ListWeekdayOrderingExceptions :exec
+SELECT order_days_exceptions FROM users
+WHERE user_hash = $1
+`
+
+func (q *Queries) ListWeekdayOrderingExceptions(ctx context.Context, userHash string) error {
+	_, err := q.db.Exec(ctx, listWeekdayOrderingExceptions, userHash)
+	return err
+}
+
 const registerBetatester = `-- name: RegisterBetatester :exec
 UPDATE users
 SET is_beta_tester = true
@@ -131,5 +167,21 @@ WHERE user_hash = $1
 
 func (q *Queries) RegisterBetatester(ctx context.Context, userHash string) error {
 	_, err := q.db.Exec(ctx, registerBetatester, userHash)
+	return err
+}
+
+const removeWeekdayOrderingException = `-- name: RemoveWeekdayOrderingException :exec
+UPDATE users
+SET order_days_exceptions = array_remove(order_days_exceptions, $2)
+WHERE user_hash = $1
+`
+
+type RemoveWeekdayOrderingExceptionParams struct {
+	UserHash    string
+	ArrayRemove interface{}
+}
+
+func (q *Queries) RemoveWeekdayOrderingException(ctx context.Context, arg RemoveWeekdayOrderingExceptionParams) error {
+	_, err := q.db.Exec(ctx, removeWeekdayOrderingException, arg.UserHash, arg.ArrayRemove)
 	return err
 }

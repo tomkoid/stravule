@@ -12,7 +12,7 @@
 
 {#if filters}
 	<div
-		class="flex flex-col sm:flex-row bg-mantle border border-surface0 gap-8 sm:gap-4 p-3 items-center msm:items-start pl-8 sm:pl-6 md:pl-4 rounded-xl"
+		class="flex flex-col w-full sm:flex-row gap-8 sm:gap-4 items-center msm:items-start rounded-xl"
 	>
 		<div class="flex-1">
 			<p class="font-bold flex flex-row items-center gap-1 text-lg">

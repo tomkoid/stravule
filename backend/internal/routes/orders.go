@@ -8,6 +8,7 @@ import (
 
 	"codeberg.org/tomkoid/stravule/backend/internal/api"
 	"codeberg.org/tomkoid/stravule/backend/internal/cache"
+	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
 	"github.com/labstack/echo/v4"
 )
 
@@ -63,4 +64,57 @@ func SendOrders(c echo.Context) error {
 	cache.RDB.Del(context.Background(), fmt.Sprintf("orders:%s:%s", sid, canteen)).Val()
 
 	return c.String(http.StatusOK, "sent")
+}
+
+func AddOrderDayException(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+	weekDay := c.QueryParam("week_day")
+
+	if weekDay == "" {
+		return c.String(http.StatusBadRequest, "Missing `week_day` parameter")
+	}
+
+	weekday, err := strconv.Atoi(weekDay)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	err = resolvers.AddOrderDayException(&userHash, weekday)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.String(http.StatusOK, "added")
+}
+
+func RemoveOrderDayException(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+	weekDay := c.QueryParam("week_day")
+
+	if weekDay == "" {
+		return c.String(http.StatusBadRequest, "Missing `week_day` parameter")
+	}
+
+	weekday, err := strconv.Atoi(weekDay)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	err = resolvers.RemoveOrderDayException(&userHash, weekday)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.String(http.StatusOK, "removed")
+}
+
+func GetOrderDayExceptions(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+
+	orderDayExceptions, err := resolvers.ListOrderDayExceptions(&userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, orderDayExceptions)
 }
