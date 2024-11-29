@@ -139,6 +139,15 @@ func Login(username string, password string, canteen string) (*LoginReturn, erro
 		if config.Cfg.BetatestersOnly && !user.IsBetaTester {
 			return nil, errors.New(betatesterErrorMsg)
 		}
+
+		// update user sid
+		err = database.DB.UpdateUserSID(ctx, db.UpdateUserSIDParams{
+			Sid:      response.SID,
+			UserHash: userHash,
+		})
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 	data := LoginReturn{

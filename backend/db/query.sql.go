@@ -185,3 +185,19 @@ func (q *Queries) RemoveWeekdayOrderingException(ctx context.Context, arg Remove
 	_, err := q.db.Exec(ctx, removeWeekdayOrderingException, arg.UserHash, arg.ArrayRemove)
 	return err
 }
+
+const updateUserSID = `-- name: UpdateUserSID :exec
+UPDATE users
+SET sid = $2
+WHERE user_hash = $1
+`
+
+type UpdateUserSIDParams struct {
+	UserHash string
+	Sid      string
+}
+
+func (q *Queries) UpdateUserSID(ctx context.Context, arg UpdateUserSIDParams) error {
+	_, err := q.db.Exec(ctx, updateUserSID, arg.UserHash, arg.Sid)
+	return err
+}

@@ -10,6 +10,11 @@ INSERT INTO users (
 )
 RETURNING *;
 
+-- name: UpdateUserSID :exec
+UPDATE users
+SET sid = $2
+WHERE user_hash = $1;
+
 -- name: ListFilters :many
 SELECT * FROM filters
 WHERE (SELECT id FROM users WHERE user_hash = $1) = user_id;
