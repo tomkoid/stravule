@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Order } from '$lib/api/orders';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
+	import { formatDate } from '$lib/utils/dates';
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 
 	interface OrderListProps {
@@ -62,7 +63,7 @@
 				</div>
 				<div>
 					<p class="text-text text-xl font-bold">
-						{orderTable[0].datum}
+						{formatDate(orderTable[0].datum)}
 					</p>
 				</div>
 			</div>
