@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
+	"codeberg.org/tomkoid/stravule/backend/internal/utils"
 )
 
 func CheckOrderingTime(orderingEndTime string) (bool, error) {
@@ -139,7 +141,26 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 			} else {
 				resPicked[i][highestScoreIdx].Pocet = 0
 			}
+
+			// don't order on days we don't want to
+			for j := 0; j < len(resPicked[i]); j++ {
+				parsedDate, err := utils.ParseDate(resPicked[i][j].Datum)
+				if err != nil {
+					// print to console but don't interrupt the request
+					log.Println(err)
+				} else {
+					if parsedDate.Weekday() == time.Tuesday {
+						for k := 0; k < len(resPicked[i]); k++ {
+							if resPicked[i][k].Datum == resPicked[i][j].Datum {
+								resPicked[i][k].Pocet = 0
+							}
+						}
+					}
+				}
+			}
+
 		}
+
 	}
 
 	return resPicked, res, nil
