@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import { listOrderDayExceptions, setOrderDayException } from '$lib/api/orders';
 	import { pickOrders } from '$lib/stores/page.svelte';
 
@@ -11,9 +11,7 @@
 	let daysFetched = $state(false);
 
 	onMount(async () => {
-		console.log('actually loaded');
 		const dayList = await listOrderDayExceptions();
-		console.log($state.snapshot(dayList));
 
 		daysChecked = [false, false, false, false, false, false, false];
 
@@ -23,22 +21,6 @@
 
 		daysFetched = true;
 	});
-
-	function arraysEqual(a: boolean[], b: boolean[]): boolean {
-		if (a === b) return true;
-		if (a == null || b == null) return false;
-		if (a.length !== b.length) return false;
-
-		// If you don't care about the order of the elements inside
-		// the array, you should sort both arrays here.
-		// Please note that calling sort on an array will modify that array.
-		// you might want to clone your array first.
-
-		for (var i = 0; i < a.length; ++i) {
-			if (a[i] !== b[i]) return false;
-		}
-		return true;
-	}
 </script>
 
 <div class="flex flex-col gap-2">
@@ -57,9 +39,6 @@
 					<button
 						onclick={async () => {
 							daysChecked[i] = !daysChecked[i];
-
-							console.log(daysChecked[i]);
-							console.log(daysValue[i]);
 							await setOrderDayException(daysChecked[i], Number(daysValue[i]));
 
 							if (pickOrders.value == true) {
