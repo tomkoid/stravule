@@ -3,11 +3,19 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"strconv"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
 )
+
+func ListOrderDayExceptions(userHash *string) ([]int32, error) {
+	user, err := database.DB.GetUser(context.Background(), *userHash)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	return user.OrderDaysExceptions, nil
+}
 
 func AddOrderDayException(userHash *string, orderDayException int) error {
 	exists, err := userHasOrderDayException(userHash, orderDayException)
@@ -48,12 +56,7 @@ func userHasOrderDayException(userHash *string, orderDayException int) (bool, er
 	}
 
 	for _, exception := range user.OrderDaysExceptions {
-		exceptionInt, err := strconv.Atoi(exception)
-		if err != nil {
-			return false, err
-		}
-
-		if exceptionInt == orderDayException {
+		if exception == int32(orderDayException) {
 			return true, nil
 		}
 	}

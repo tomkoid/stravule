@@ -47,6 +47,11 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 		return nil, nil, err
 	}
 
+	orderDayExceptions, err := resolvers.ListOrderDayExceptions(&userHash)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	// score and compare orders by filters within each order table
 	for i := range resPicked {
 		for j := range resPicked[i] {
@@ -149,10 +154,12 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 					// print to console but don't interrupt the request
 					log.Println(err)
 				} else {
-					if parsedDate.Weekday() == time.Tuesday {
-						for k := 0; k < len(resPicked[i]); k++ {
-							if resPicked[i][k].Datum == resPicked[i][j].Datum {
-								resPicked[i][k].Pocet = 0
+					for _, exceptionDay := range orderDayExceptions {
+						if parsedDate.Weekday() == time.Weekday(exceptionDay) {
+							for k := 0; k < len(resPicked[i]); k++ {
+								if resPicked[i][k].Datum == resPicked[i][j].Datum {
+									resPicked[i][k].Pocet = 0
+								}
 							}
 						}
 					}

@@ -33,6 +33,10 @@ UPDATE users
 SET is_beta_tester = true
 WHERE user_hash = $1;
 
+-- name: ListWeekdayOrderingExceptions :exec
+SELECT order_days_exceptions FROM users
+WHERE user_hash = $1;
+
 -- name: AddWeekdayOrderingException :exec
 UPDATE users
 SET order_days_exceptions = array_append(order_days_exceptions, $2)

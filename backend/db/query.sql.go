@@ -101,7 +101,7 @@ type GetUserRow struct {
 	ID                  int32
 	UserHash            string
 	Sid                 string
-	OrderDaysExceptions []string
+	OrderDaysExceptions []int32
 	IsBetaTester        bool
 }
 
@@ -147,6 +147,16 @@ func (q *Queries) ListFilters(ctx context.Context, userHash string) ([]Filter, e
 		return nil, err
 	}
 	return items, nil
+}
+
+const listWeekdayOrderingExceptions = `-- name: ListWeekdayOrderingExceptions :exec
+SELECT order_days_exceptions FROM users
+WHERE user_hash = $1
+`
+
+func (q *Queries) ListWeekdayOrderingExceptions(ctx context.Context, userHash string) error {
+	_, err := q.db.Exec(ctx, listWeekdayOrderingExceptions, userHash)
+	return err
 }
 
 const registerBetatester = `-- name: RegisterBetatester :exec

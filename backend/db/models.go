@@ -21,5 +21,5 @@ type User struct {
 	UserHash            string
 	Sid                 string
 	IsBetaTester        bool
-	OrderDaysExceptions []string
+	OrderDaysExceptions []int32
 }
