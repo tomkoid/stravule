@@ -86,16 +86,18 @@
 	</Collapsible.Root>
 
 	{#if pickOrders.value}
-		<button
-			onclick={async () => {
-				await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
-				pickOrders.value = false;
-			}}
-			class="flex flex-row items-center gap-1 px-2 py-1 w-fit rounded bg-ctp-green text-base transition-all hover:rounded-xl"
-		>
-			<Icon color="inherit" icon="mdi:check" />
-			Potrvdit změny od Stravule a nastavit obědy</button
-		>
+		<div class="">
+			<button
+				onclick={async () => {
+					await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+					pickOrders.value = false;
+				}}
+				class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
+			>
+				<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
+				Potrvdit změny od Stravule a nastavit obědy</button
+			>
+		</div>
 	{/if}
 
 	{#if orders && selected}
