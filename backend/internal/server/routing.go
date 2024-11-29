@@ -22,6 +22,7 @@ func initAPI(e *echo.Group) error {
 	uh.GET("/filters", routes.ListFilters)
 	uh.POST("/filters", routes.AddFilter)
 	uh.DELETE("/filters", routes.RemoveFilter)
+	uh.GET("/order_day_exceptions", routes.GetOrderDayExceptions)
 	uh.POST("/order_day_exception", routes.AddOrderDayException)
 	uh.DELETE("/order_day_exception", routes.RemoveOrderDayException)
 

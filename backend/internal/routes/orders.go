@@ -107,3 +107,14 @@ func RemoveOrderDayException(c echo.Context) error {
 
 	return c.String(http.StatusOK, "removed")
 }
+
+func GetOrderDayExceptions(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+
+	orderDayExceptions, err := resolvers.ListOrderDayExceptions(&userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, orderDayExceptions)
+}
