@@ -75,3 +75,24 @@ export async function removeFilter(filterString: string): Promise<Filters> {
 
   return data
 }
+
+export async function updateFilterWeight(filterString: string, newWeight: number) {
+  let params = new URLSearchParams()
+
+  params.append("user_hash", localStorage.getItem("user_hash")!)
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/filters_weight?${params.toString()}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      value: filterString,
+      weight: newWeight,
+    }),
+  })
+
+  if (req.status != 200) {
+    errors.add(await req.text())
+    throw new Error(await req.text())
+  }
+}
