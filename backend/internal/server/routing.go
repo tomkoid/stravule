@@ -21,6 +21,7 @@ func initAPI(e *echo.Group) error {
 	scuh.POST("/save_orders", routes.SendOrders)
 	uh.GET("/filters", routes.ListFilters)
 	uh.POST("/filters", routes.AddFilter)
+	uh.PUT("/filters_weight", routes.UpdateFilterWeight)
 	uh.DELETE("/filters", routes.RemoveFilter)
 	uh.GET("/order_day_exceptions", routes.GetOrderDayExceptions)
 	uh.POST("/order_day_exception", routes.AddOrderDayException)

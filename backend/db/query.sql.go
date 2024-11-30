@@ -12,11 +12,12 @@ import (
 )
 
 const addFilter = `-- name: AddFilter :exec
-INSERT INTO filters (user_id, filter_text, category)
+INSERT INTO filters (user_id, filter_text, category, weight)
 VALUES (
   (SELECT id FROM users WHERE user_hash = $1),
   $2,
-  $3
+  $3,
+  $4
 )
 `
 
@@ -24,10 +25,16 @@ type AddFilterParams struct {
 	UserHash   string
 	FilterText string
 	Category   pgtype.Text
+	Weight     int32
 }
 
 func (q *Queries) AddFilter(ctx context.Context, arg AddFilterParams) error {
-	_, err := q.db.Exec(ctx, addFilter, arg.UserHash, arg.FilterText, arg.Category)
+	_, err := q.db.Exec(ctx, addFilter,
+		arg.UserHash,
+		arg.FilterText,
+		arg.Category,
+		arg.Weight,
+	)
 	return err
 }
 
@@ -119,7 +126,7 @@ func (q *Queries) GetUser(ctx context.Context, userHash string) (GetUserRow, err
 }
 
 const listFilters = `-- name: ListFilters :many
-SELECT id, user_id, filter_text, category, created_at FROM filters
+SELECT id, user_id, filter_text, category, created_at, weight FROM filters
 WHERE (SELECT id FROM users WHERE user_hash = $1) = user_id
 `
 
@@ -138,6 +145,7 @@ func (q *Queries) ListFilters(ctx context.Context, userHash string) ([]Filter, e
 			&i.FilterText,
 			&i.Category,
 			&i.CreatedAt,
+			&i.Weight,
 		); err != nil {
 			return nil, err
 		}
@@ -183,6 +191,31 @@ type RemoveWeekdayOrderingExceptionParams struct {
 
 func (q *Queries) RemoveWeekdayOrderingException(ctx context.Context, arg RemoveWeekdayOrderingExceptionParams) error {
 	_, err := q.db.Exec(ctx, removeWeekdayOrderingException, arg.UserHash, arg.ArrayRemove)
+	return err
+}
+
+const updateFilterWeight = `-- name: UpdateFilterWeight :exec
+UPDATE filters
+SET weight = $2
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $3
+  AND category = $4
+`
+
+type UpdateFilterWeightParams struct {
+	UserHash   string
+	Weight     int32
+	FilterText string
+	Category   pgtype.Text
+}
+
+func (q *Queries) UpdateFilterWeight(ctx context.Context, arg UpdateFilterWeightParams) error {
+	_, err := q.db.Exec(ctx, updateFilterWeight,
+		arg.UserHash,
+		arg.Weight,
+		arg.FilterText,
+		arg.Category,
+	)
 	return err
 }
 

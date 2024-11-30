@@ -20,18 +20,26 @@ SELECT * FROM filters
 WHERE (SELECT id FROM users WHERE user_hash = $1) = user_id;
 
 -- name: AddFilter :exec
-INSERT INTO filters (user_id, filter_text, category)
+INSERT INTO filters (user_id, filter_text, category, weight)
 VALUES (
   (SELECT id FROM users WHERE user_hash = $1),
   $2,
-  $3
+  $3,
+  $4
 );
 
 -- name: DeleteFilter :exec
 DELETE FROM filters
 WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
   AND filter_text = $2
-  AND category = $3;
+  AND category = $3; 
+
+-- name: UpdateFilterWeight :exec
+UPDATE filters
+SET weight = $2
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $3
+  AND category = $4;
 
 -- name: RegisterBetatester :exec
 UPDATE users

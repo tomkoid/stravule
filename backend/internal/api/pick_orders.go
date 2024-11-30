@@ -71,15 +71,15 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 			}
 
 			for _, filter := range filters.Include {
-				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter)) {
-					order.Score += 1
+				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter.Value)) {
+					order.Score += filter.Weight
 					order.selectedByIncludeFilter = true
 				}
 			}
 
 			for _, filter := range filters.Exclude {
-				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter)) {
-					order.Score -= 2
+				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter.Value)) {
+					order.Score -= filter.Weight
 					order.selectedByExcludeFilter = true
 				}
 			}
