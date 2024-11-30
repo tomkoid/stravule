@@ -32,7 +32,14 @@ VALUES (
 DELETE FROM filters
 WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
   AND filter_text = $2
-  AND category = $3;
+  AND category = $3; 
+
+-- name: UpdateFilterWeight :exec
+UPDATE filters
+SET weight = $2
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $3
+  AND category = $4;
 
 -- name: RegisterBetatester :exec
 UPDATE users

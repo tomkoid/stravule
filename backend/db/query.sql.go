@@ -194,6 +194,31 @@ func (q *Queries) RemoveWeekdayOrderingException(ctx context.Context, arg Remove
 	return err
 }
 
+const updateFilterWeight = `-- name: UpdateFilterWeight :exec
+UPDATE filters
+SET weight = $2
+WHERE user_id = (SELECT id FROM users WHERE user_hash = $1)
+  AND filter_text = $3
+  AND category = $4
+`
+
+type UpdateFilterWeightParams struct {
+	UserHash   string
+	Weight     int32
+	FilterText string
+	Category   pgtype.Text
+}
+
+func (q *Queries) UpdateFilterWeight(ctx context.Context, arg UpdateFilterWeightParams) error {
+	_, err := q.db.Exec(ctx, updateFilterWeight,
+		arg.UserHash,
+		arg.Weight,
+		arg.FilterText,
+		arg.Category,
+	)
+	return err
+}
+
 const updateUserSID = `-- name: UpdateUserSID :exec
 UPDATE users
 SET sid = $2

@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -162,6 +163,35 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	}
 
 	return finalFilters, nil
+}
+
+func UpdateFilterWeight(userHash *string, filter Filter) error {
+	if !isFilterValid(&filter.Value) {
+		return errors.New("invalid filter value")
+	}
+
+	filters, err := database.DB.ListFilters(context.Background(), *userHash)
+
+	if err != nil {
+		return errors.New(fmt.Sprintf("filters not found: %v", err))
+	}
+
+	for _, f := range filters {
+		if f.FilterText == filter.Value {
+			database.DB.UpdateFilterWeight(context.Background(), db.UpdateFilterWeightParams{
+				FilterText: f.FilterText,
+				Category: pgtype.Text{
+					String: f.Category.String,
+					Valid:  true,
+				},
+				Weight:   int32(filter.Weight),
+				UserHash: *userHash,
+			})
+			return nil
+		}
+	}
+
+	return errors.New("Filter nenalezen.")
 }
 
 func isFilterValid(filter *string) bool {
