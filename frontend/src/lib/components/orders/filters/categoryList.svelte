@@ -4,9 +4,8 @@
 	import { pickOrders } from '$lib/stores/page.svelte';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
-	import { Dialog, Slider, DropdownMenu } from 'bits-ui';
+	import { Slider, DropdownMenu } from 'bits-ui';
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
 
 	interface FiltersProps {
 		filters?: Filter[];
@@ -78,7 +77,6 @@
 						step={1}
 						bind:value={sliderVal[i]}
 						onValueChange={(value) => {
-							console.log(`${i} ${value}`);
 							editWeightConfirm[i] = true;
 						}}
 						let:ticks
@@ -199,8 +197,6 @@
 					await addFilter(newFilter, category);
 
 					// add filter to the list
-					// filters = [...filters!, { value: newFilter, weight: 1 }];
-					console.log($state.snapshot(filters!));
 					filters!.push({ value: newFilter, weight: 1, category: category, created_at: '' });
 					dropdownShown.push(false);
 					sliderVal.push(category == 'include' ? [5] : [10]);
