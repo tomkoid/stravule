@@ -33,12 +33,14 @@
 	}
 
 	let mountOrdersLoaded = $state(false);
+	let originalOrders = $state<Order[][]>([]);
 	onMount(async () => {
 		orders = await loadOrders(
 			localStorage.getItem('sid')!,
 			localStorage.getItem('canteen')!,
 			pickOrders.value
 		);
+		originalOrders = orders;
 		filters = await loadFilters();
 		renderOrders(orders);
 		mountOrdersLoaded = true;
@@ -55,6 +57,18 @@
 			renderOrders(ordersFetched);
 		});
 	});
+
+	function getDifference(ordersA: Order[][], ordersB: Order[][]): number {
+		let difference = 0;
+		for (let i = 0; i < ordersA.length; i++) {
+			for (let j = 0; j < ordersA[i].length; j++) {
+				if (ordersA[i][j].pocet != ordersB[i][j].pocet) {
+					difference++;
+				}
+			}
+		}
+		return difference;
+	}
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
@@ -86,16 +100,20 @@
 	</Collapsible.Root>
 
 	{#if pickOrders.value}
-		<div class="">
+		<div>
 			<button
 				onclick={async () => {
 					await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+					originalOrders = orders!;
 					pickOrders.value = false;
 				}}
 				class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
 			>
 				<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
-				Potrvdit změny od Stravule a nastavit obědy</button
+				Potrvdit změny od Stravule a nastavit obědy (změn: {getDifference(
+					orders!,
+					originalOrders
+				)})</button
 			>
 		</div>
 	{/if}
