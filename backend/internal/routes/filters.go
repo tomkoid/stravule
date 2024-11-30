@@ -7,6 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const (
+	FilterWeightMin = 1
+	FilterWeightMax = 20
+)
+
 func ListFilters(c echo.Context) error {
 	userHash := c.QueryParam("user_hash")
 
@@ -24,6 +29,10 @@ func AddFilter(c echo.Context) error {
 	filter := resolvers.Filter{}
 	if err := c.Bind(&filter); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	if filter.Weight > FilterWeightMax || filter.Weight < FilterWeightMin {
+		return c.String(http.StatusBadRequest, "Invalid `weight` parameter")
 	}
 
 	filters, err := resolvers.AddFilter(&userHash, filter)
@@ -60,6 +69,10 @@ func UpdateFilterWeight(c echo.Context) error {
 
 	if filter.Weight == 0 {
 		return c.String(http.StatusBadRequest, "Missing `weight` parameter")
+	}
+
+	if filter.Weight > FilterWeightMax || filter.Weight < FilterWeightMin {
+		return c.String(http.StatusBadRequest, "Invalid `weight` parameter")
 	}
 
 	err := resolvers.UpdateFilterWeight(&userHash, filter)
