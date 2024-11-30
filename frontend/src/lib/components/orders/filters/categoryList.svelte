@@ -74,7 +74,7 @@
 					<Slider.Root
 						class="relative flex touch-none select-none items-center max-w-[12rem] m-5"
 						min={1}
-						max={10}
+						max={category == 'include' ? 10 : 20}
 						step={1}
 						bind:value={sliderVal[i]}
 						onValueChange={(value) => {
@@ -99,11 +99,15 @@
 							<Slider.Tick {tick} />
 						{/each}
 					</Slider.Root>
-					<div class="flex flex-row justify-between w-[12rem] m-5">
-						{#each { length: 10 } as _, i}
-							<p class="text-subtext0 text-sm mt-[-4px] w-[19px]">{i + 1}</p>
-						{/each}
-					</div>
+					{#if category == 'include'}
+						<div class="flex flex-row justify-between w-[12rem] m-5">
+							{#each { length: 10 } as _, i}
+								<p class="text-subtext0 text-sm mt-[-4px] w-[19px]">{i + 1}</p>
+							{/each}
+						</div>
+					{:else}
+						<p class="text-subtext0 text-sm mt-[-13px] mb-2 text-center">Váha: {sliderVal[i][0]}</p>
+					{/if}
 					<div>
 						<!-- </DropdownMenu.Item> -->
 						<button
@@ -198,6 +202,9 @@
 					// filters = [...filters!, { value: newFilter, weight: 1 }];
 					console.log($state.snapshot(filters!));
 					filters!.push({ value: newFilter, weight: 1, category: category, created_at: '' });
+					dropdownShown.push(false);
+					sliderVal.push(category == 'include' ? [5] : [10]);
+
 					newFilter = '';
 
 					if (pickOrders.value == true) {
