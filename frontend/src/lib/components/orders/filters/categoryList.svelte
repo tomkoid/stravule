@@ -8,8 +8,12 @@
 	import { fade } from 'svelte/transition';
 
 	interface FiltersProps {
-		filters?: string[];
+		filters?: Filter[];
 		category: string;
+	}
+
+	interface Filter {
+		value: string;
 	}
 
 	let { filters = $bindable(), category }: FiltersProps = $props();
@@ -19,13 +23,13 @@
 
 	let transactionHappening = false;
 	let dialogShown: boolean[] = $state(new Array(filters!.length).fill(false));
-	let editFilter = $state(''); // what filter to remove state
+	let editFilter: Filter = $state({ value: '' }); // what filter to remove state
 </script>
 
 {#if filters}
 	{#each filters as filter, i}
 		<div class="flex flex-row items-center gap-1">
-			<p class="text">{filter}</p>
+			<p class="text">{filter.value}</p>
 
 			<Dialog.Root bind:open={dialogShown[i]}>
 				<Dialog.Trigger onclick={() => (editFilter = filter)}>
@@ -46,7 +50,7 @@
 							>Jste si jisti?</Dialog.Title
 						>
 						<Dialog.Description class="text-sm text-subtext1 mb-4">
-							Tímto potvrzujete, že chcete smazat filtr "{editFilter}".
+							Tímto potvrzujete, že chcete smazat filtr "{editFilter.value}".
 						</Dialog.Description>
 						<div class="flex flex-row items-center justify-center gap-2 h-12">
 							<button
@@ -69,7 +73,7 @@
 
 									dialogShown[i] = false;
 
-									await removeFilter(editFilter);
+									await removeFilter(editFilter.value);
 
 									if (pickOrders.value == true) {
 										pickOrders.value = false;
@@ -120,7 +124,7 @@
 				await addFilter(newFilter, category);
 
 				// add filter to the list
-				filters = [...filters!, newFilter];
+				filters = [...filters!, { value: newFilter }];
 				newFilter = '';
 
 				if (pickOrders.value == true) {

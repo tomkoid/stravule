@@ -37,6 +37,7 @@ export async function addFilter(filterString: string, category: string): Promise
     body: JSON.stringify({
       category: category,
       value: filterString,
+      weight: category == "exclude" ? 2 : 1
     }),
   })
 

@@ -14,6 +14,7 @@ type Filter struct {
 	FilterText string
 	Category   pgtype.Text
 	CreatedAt  pgtype.Timestamp
+	Weight     int32
 }
 
 type User struct {

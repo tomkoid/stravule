@@ -11,27 +11,31 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type Filter struct {
+type FilterReq struct {
 	Category string `json:"category"`
 	Value    string `json:"value"`
 }
 
-type Filters struct {
-	Include []string `json:"include"`
-	Exclude []string `json:"exclude"`
+type Filter struct {
+	Category  string `json:"category"`
+	Value     string `json:"value"`
+	CreatedAt string `json:"created_at"`
+	Weight    int    `json:"weight"`
 }
 
-var filtersGlob = Filters{Include: []string{
-	"bramborové knedlíky",
-	"vrabec",
-}, Exclude: []string{
-	"kuskus",
-	"brambory",
-	"bramborová kaže",
-	"okurka",
-	"játra",
-	"rýže",
-},
+// func (f FilterReq) ToFilter() Filter {
+// 	flt := Filter{
+// 		Category:  f.Category,
+// 		Value:     f.Value,
+// 		CreatedAt: filter.CreatedAt.Time.String(),
+// 		Weight:    int(filter.Weight),
+// 	}
+// 	return flt
+// }
+
+type Filters struct {
+	Include []Filter `json:"include"`
+	Exclude []Filter `json:"exclude"`
 }
 
 func GetFilters(userHash *string) (*Filters, error) {
@@ -41,13 +45,19 @@ func GetFilters(userHash *string) (*Filters, error) {
 		return nil, err
 	}
 
-	var filters Filters = Filters{Include: []string{}, Exclude: []string{}}
+	var filters Filters = Filters{Include: make([]Filter, 0), Exclude: make([]Filter, 0)}
 
 	for _, filter := range dbFilters {
+		flt := Filter{
+			Category:  filter.Category.String,
+			Value:     filter.FilterText,
+			CreatedAt: filter.CreatedAt.Time.String(),
+			Weight:    int(filter.Weight),
+		}
 		if filter.Category.String == "include" {
-			filters.Include = append(filters.Include, filter.FilterText)
+			filters.Include = append(filters.Include, flt)
 		} else if filter.Category.String == "exclude" {
-			filters.Exclude = append(filters.Exclude, filter.FilterText)
+			filters.Exclude = append(filters.Exclude, flt)
 		}
 	}
 
@@ -67,12 +77,12 @@ func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 
 	// if filter already exists, do nothing
 	for _, f := range finalFilters.Include {
-		if f == filter.Value {
+		if f.Value == filter.Value {
 			return nil, errors.New("Filter už existuje v kategorii chci.")
 		}
 	}
 	for _, f := range finalFilters.Exclude {
-		if f == filter.Value {
+		if f.Value == filter.Value {
 			return nil, errors.New("Filter už existuje v kategorii nechci.")
 		}
 	}
@@ -84,9 +94,10 @@ func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 				String: "include",
 				Valid:  true,
 			},
+			Weight:   int32(filter.Weight),
 			UserHash: *userHash,
 		})
-		finalFilters.Include = append(finalFilters.Include, filter.Value)
+		finalFilters.Include = append(finalFilters.Include, filter)
 	} else if filter.Category == "exclude" {
 		database.DB.AddFilter(context.Background(), db.AddFilterParams{
 			FilterText: filter.Value,
@@ -94,9 +105,10 @@ func AddFilter(userHash *string, filter Filter) (*Filters, error) {
 				String: "exclude",
 				Valid:  true,
 			},
+			Weight:   int32(filter.Weight),
 			UserHash: *userHash,
 		})
-		finalFilters.Exclude = append(finalFilters.Exclude, filter.Value)
+		finalFilters.Exclude = append(finalFilters.Exclude, filter)
 	} else {
 		return nil, errors.New("invalid filter category")
 	}
@@ -117,7 +129,7 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 	}
 
 	for i := 0; i < len(finalFilters.Include); i++ {
-		if finalFilters.Include[i] == filter.Value {
+		if finalFilters.Include[i].Value == filter.Value {
 			database.DB.DeleteFilter(context.Background(), db.DeleteFilterParams{
 				FilterText: filter.Value,
 				Category: pgtype.Text{
@@ -131,7 +143,7 @@ func RemoveFilter(userHash *string, filter Filter) (*Filters, error) {
 		}
 	}
 	for i := 0; i < len(finalFilters.Exclude); i++ {
-		if finalFilters.Exclude[i] == filter.Value {
+		if finalFilters.Exclude[i].Value == filter.Value {
 			database.DB.DeleteFilter(context.Background(), db.DeleteFilterParams{
 				FilterText: filter.Value,
 				Category: pgtype.Text{
