@@ -2,8 +2,15 @@ import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import { errors } from '$lib/stores/errors.svelte';
 
 export interface Filters {
-  include: string[]
-  exclude: string[]
+  include: Filter[]
+  exclude: Filter[]
+}
+
+export interface Filter {
+  value: string;
+  weight: number;
+  category: string;
+  created_at: string;
 }
 
 // returns all filters for the current user 

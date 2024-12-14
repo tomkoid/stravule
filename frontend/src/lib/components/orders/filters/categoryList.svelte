@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { addFilter, removeFilter, updateFilterWeight } from '$lib/api/filters';
+	import { addFilter, removeFilter, updateFilterWeight, type Filter } from '$lib/api/filters';
 	import { errors } from '$lib/stores/errors.svelte';
 	import { pickOrders } from '$lib/stores/page.svelte';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
@@ -10,13 +10,6 @@
 	interface FiltersProps {
 		filters?: Filter[];
 		category: string;
-	}
-
-	interface Filter {
-		value: string;
-		weight: number;
-		category: string;
-		created_at: string;
 	}
 
 	let { filters = $bindable(), category }: FiltersProps = $props();

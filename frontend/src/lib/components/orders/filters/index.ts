@@ -1,4 +1,4 @@
-import Root from "./filtersList.svelte"
+import Root from "./filters.svelte"
 
 export {
   Root,
