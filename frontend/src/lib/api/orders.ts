@@ -135,7 +135,8 @@ export async function setNoOrderDay(value: boolean, day: string) {
   })
 
   if (req.status != 200) {
-    errors.add(await req.text())
-    throw new Error(await req.text())
+    const text = await req.text()
+    errors.add(text)
+    throw new Error(text)
   }
 }

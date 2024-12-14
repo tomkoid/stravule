@@ -48,39 +48,6 @@
 		fixedWeeks={true}
 		multiple={true}
 		bind:value={calendarValue}
-		onValueChange={async (val) => {
-			if (!val || val.length == 0) {
-				return;
-			}
-
-			for (
-				let i = 0;
-				i < (val.length > originalCalendarValue.length ? val.length : originalCalendarValue.length);
-				i++
-			) {
-				if (val[i] != originalCalendarValue[i]) {
-					const og = originalCalendarValue[i];
-					const nv = val[i];
-
-					if (og == undefined && nv) {
-						console.log(`calendar: adding ${nv.toString()}`);
-						await setNoOrderDay(true, `${nv.year}-${nv.month}-${nv.day}`);
-					}
-					if (og && nv == undefined) {
-						console.log(`calendar: deleting ${og.toString()}`);
-						await setNoOrderDay(false, `${og.year}-${og.month}-${og.day}`);
-					}
-				}
-			}
-
-			originalCalendarValue = val;
-			changes = true;
-
-			if (pickOrders.value == true) {
-				pickOrders.value = false;
-				pickOrders.value = true;
-			}
-		}}
 	>
 		<Calendar.Header class="flex items-center justify-between">
 			<Calendar.PrevButton
@@ -116,6 +83,28 @@
 											{date}
 											month={month.value}
 											class="group transition-all relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-transparent p-0 text-sm font-normal text-foreground hover:border-surface2 data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:bg-text data-[selected]:font-medium data-[disabled]:text-text/30 data-[selected]:text-base data-[unavailable]:text-text/20 data-[unavailable]:line-through"
+											onclick={async () => {
+												if (
+													originalCalendarValue &&
+													originalCalendarValue.toString().includes(date.toString())
+												) {
+													console.log(`calendar: removing ${date.toString()}`);
+													originalCalendarValue = calendarValue;
+													await setNoOrderDay(false, date.toString());
+												} else {
+													console.log(`calendar: adding ${date.toString()}`);
+													originalCalendarValue = calendarValue;
+													await setNoOrderDay(true, date.toString());
+												}
+
+												originalCalendarValue = calendarValue;
+												changes = true;
+
+												if (pickOrders.value == true) {
+													pickOrders.value = false;
+													pickOrders.value = true;
+												}
+											}}
 										>
 											<div
 												class="absolute top-[5px] hidden size-1 rounded-full bg-foreground group-data-[today]:block group-data-[selected]:bg-background"
