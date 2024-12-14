@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT id, user_hash, sid, order_days_exceptions, is_beta_tester FROM users
+SELECT id, user_hash, sid, order_days_exceptions, no_order_days, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1;
 
 -- name: CreateUser :one

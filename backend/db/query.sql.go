@@ -60,7 +60,7 @@ INSERT INTO users (
 ) VALUES (
     $1, $2
 )
-RETURNING id, user_hash, sid, is_beta_tester, order_days_exceptions
+RETURNING id, user_hash, sid, is_beta_tester, order_days_exceptions, no_order_days
 `
 
 type CreateUserParams struct {
@@ -77,6 +77,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Sid,
 		&i.IsBetaTester,
 		&i.OrderDaysExceptions,
+		&i.NoOrderDays,
 	)
 	return i, err
 }
@@ -100,7 +101,7 @@ func (q *Queries) DeleteFilter(ctx context.Context, arg DeleteFilterParams) erro
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_hash, sid, order_days_exceptions, is_beta_tester FROM users
+SELECT id, user_hash, sid, order_days_exceptions, no_order_days, is_beta_tester FROM users
 WHERE user_hash = $1 LIMIT 1
 `
 
@@ -109,6 +110,7 @@ type GetUserRow struct {
 	UserHash            string
 	Sid                 string
 	OrderDaysExceptions []int32
+	NoOrderDays         []string
 	IsBetaTester        bool
 }
 
@@ -120,6 +122,7 @@ func (q *Queries) GetUser(ctx context.Context, userHash string) (GetUserRow, err
 		&i.UserHash,
 		&i.Sid,
 		&i.OrderDaysExceptions,
+		&i.NoOrderDays,
 		&i.IsBetaTester,
 	)
 	return i, err
