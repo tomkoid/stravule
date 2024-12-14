@@ -28,7 +28,7 @@ func initAPI(e *echo.Group) error {
 	uh.DELETE("/order_day_exception", routes.RemoveOrderDayException)
 	uh.GET("/no_orders", routes.ListNoOrderDays)
 	uh.POST("/no_orders", routes.AddNoOrderDay)
-	uh.DELETE("/no_orders", routes.AddOrderDayException)
+	uh.DELETE("/no_orders", routes.RemoveNoOrderDay)
 
 	// betatester stuff
 	if config.Cfg.BetatestersOnly {
