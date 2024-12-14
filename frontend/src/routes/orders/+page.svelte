@@ -59,6 +59,10 @@
 	});
 
 	function getDifference(ordersA: Order[][], ordersB: Order[][]): number {
+		if (!ordersA || !ordersB) {
+			return -1;
+		}
+
 		let difference = 0;
 		for (let i = 0; i < ordersA.length; i++) {
 			for (let j = 0; j < ordersA[i].length; j++) {
@@ -107,7 +111,7 @@
 		</Collapsible.Content>
 	</Collapsible.Root>
 
-	{#if pickOrders.value}
+	{#if pickOrders.value && orders && getDifference(orders, originalOrders) > 0}
 		<div>
 			<button
 				onclick={async () => {
@@ -115,7 +119,7 @@
 					originalOrders = orders!;
 					pickOrders.value = false;
 				}}
-				class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
+				class="flex flex-row items-center w-fit gap-1 px-2 py-1 h-8 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
 			>
 				<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
 				Potrvdit změny od Stravule a nastavit obědy (změn: {getDifference(
@@ -123,6 +127,10 @@
 					originalOrders
 				)})</button
 			>
+		</div>
+	{:else if pickOrders.value && orders && getDifference(orders, originalOrders) == 0}
+		<div class="flex flex-row items-center h-8 gap-1">
+			<p class="text-subtext0">--- Žádné změny od Stravule ---</p>
 		</div>
 	{/if}
 
