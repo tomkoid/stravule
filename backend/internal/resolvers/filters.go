@@ -4,11 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
+	"sort"
 	"strings"
+	"time"
 
 	"codeberg.org/tomkoid/stravule/backend/db"
 	"codeberg.org/tomkoid/stravule/backend/internal/database"
+	"codeberg.org/tomkoid/stravule/backend/internal/utils"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -62,7 +66,31 @@ func GetFilters(userHash *string) (*Filters, error) {
 		}
 	}
 
+	filters.Include = sortFilters(filters.Include)
+	filters.Exclude = sortFilters(filters.Exclude)
+
+	log.Println(filters.Include)
+
 	return &filters, nil
+}
+
+func sortFilters(filterType []Filter) []Filter {
+	layout := "2006-01-02 15:04:05 -0700 MST"
+	sort.Slice(filterType, func(i, j int) bool {
+		filter1time, err := time.Parse(layout, utils.NormalizeDateString(filterType[i].CreatedAt))
+		if err != nil {
+			log.Println(err)
+		}
+
+		filter2time, err := time.Parse(layout, utils.NormalizeDateString(filterType[j].CreatedAt))
+		if err != nil {
+			log.Println(err)
+		}
+
+		return filter1time.Before(filter2time)
+	})
+
+	return filterType
 }
 
 func AddFilter(userHash *string, filter Filter) (*Filters, error) {
