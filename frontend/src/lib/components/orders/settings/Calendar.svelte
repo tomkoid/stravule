@@ -2,7 +2,6 @@
 	import Icon from '@iconify/svelte';
 	import { Calendar } from 'bits-ui';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
-	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import { onMount } from 'svelte';
 	import { listNoOrderDays, setNoOrderDay } from '$lib/api/orders';
 	import { pickOrders } from '$lib/stores/page.svelte';
@@ -23,14 +22,10 @@
 			const month = parseInt(daySplit[1]);
 			const dayDay = parseInt(daySplit[2]);
 
-			// console.log(year, month, dayDay);
-
 			const newDate = new CalendarDate(year, month, dayDay);
 			calendarValue.push(newDate);
 			originalCalendarValue.push(newDate);
 		}
-
-		// console.log($state.snapshot(calendarValue));
 	});
 
 	let changes = $state(false);
