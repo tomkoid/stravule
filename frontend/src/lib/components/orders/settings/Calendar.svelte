@@ -1,6 +1,12 @@
-<script>
+<script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { Calendar } from 'bits-ui';
+	import { CalendarDate, type DateValue } from '@internationalized/date';
+	import { flyAndScale } from '$lib/utils/flyAndScale';
+	import { slide } from 'svelte/transition';
+
+	let calendarValue: DateValue[] = [new CalendarDate(2024, 12, 18)];
+	let changes = false;
 </script>
 
 <div>
@@ -11,6 +17,18 @@
 		</div>
 		<p class="text-sm text-subtext0">Vyber si dny, kdy automaticky odhlásit oběd.</p>
 	</div>
+	{#if changes}
+		<button
+			class="bg-lime-200 px-2 flex flex-row flex-nowrap items-center gap-2 text-base transition-all rounded-md hover:rounded-xl hover:bg-lime-300 my-2"
+			on:click={() => {
+				changes = false;
+			}}
+			transition:flyAndScale
+		>
+			<Icon icon="mdi:check" class="text-xl text-inherit " />
+			Potvrdit změny
+		</button>
+	{/if}
 	<Calendar.Root
 		class="mt-4 rounded-[15px] border border-surface1 bg-mantle/30 p-[22px] shadow-sm shadow-surface0 max-w-fit"
 		let:months
@@ -19,6 +37,11 @@
 		weekStartsOn={1}
 		fixedWeeks={true}
 		multiple={true}
+		bind:value={calendarValue}
+		onValueChange={(val) => {
+			console.log(`Value changed to ${val}`);
+			changes = true;
+		}}
 	>
 		<Calendar.Header class="flex items-center justify-between">
 			<Calendar.PrevButton
