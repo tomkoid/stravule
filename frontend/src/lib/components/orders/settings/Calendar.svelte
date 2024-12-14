@@ -4,8 +4,9 @@
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import { onMount } from 'svelte';
-	import { listNoOrderDays } from '$lib/api/orders';
+	import { listNoOrderDays, setNoOrderDay } from '$lib/api/orders';
 
+	let originalCalendarValue: DateValue[] = $state([]);
 	let calendarValue: DateValue[] = $state([]);
 
 	onMount(async () => {
@@ -21,13 +22,14 @@
 			const month = parseInt(daySplit[1]);
 			const dayDay = parseInt(daySplit[2]);
 
-			console.log(year, month, dayDay);
+			// console.log(year, month, dayDay);
 
 			const newDate = new CalendarDate(year, month, dayDay);
 			calendarValue.push(newDate);
+			originalCalendarValue.push(newDate);
 		}
 
-		console.log($state.snapshot(calendarValue));
+		// console.log($state.snapshot(calendarValue));
 	});
 
 	let changes = $state(false);
@@ -41,18 +43,6 @@
 		</div>
 		<p class="text-sm text-subtext0">Vyber si dny, kdy automaticky odhlásit oběd.</p>
 	</div>
-	{#if changes}
-		<button
-			class="bg-lime-200 px-2 flex flex-row flex-nowrap items-center gap-2 text-base transition-all rounded-md hover:rounded-xl hover:bg-lime-300 my-2"
-			onclick={() => {
-				changes = false;
-			}}
-			transition:flyAndScale
-		>
-			<Icon icon="mdi:check" class="text-xl text-inherit " />
-			Potvrdit změny
-		</button>
-	{/if}
 	<Calendar.Root
 		class="mt-4 rounded-[15px] border border-surface1 bg-mantle/30 p-[22px] shadow-sm shadow-surface0 max-w-fit"
 		let:months
@@ -62,8 +52,32 @@
 		fixedWeeks={true}
 		multiple={true}
 		bind:value={calendarValue}
-		onValueChange={(val) => {
-			console.log(`Value changed to ${val}`);
+		onValueChange={async (val) => {
+			if (!val || val.length == 0) {
+				return;
+			}
+
+			for (
+				let i = 0;
+				i < (val.length > originalCalendarValue.length ? val.length : originalCalendarValue.length);
+				i++
+			) {
+				if (val[i] != originalCalendarValue[i]) {
+					const og = originalCalendarValue[i];
+					const nv = val[i];
+
+					if (og == undefined && nv) {
+						console.log(`calendar: adding ${nv.toString()}`);
+						await setNoOrderDay(true, `${nv.year}-${nv.month}-${nv.day}`);
+					}
+					if (og && nv == undefined) {
+						console.log(`calendar: deleting ${og.toString()}`);
+						await setNoOrderDay(false, `${og.year}-${og.month}-${og.day}`);
+					}
+				}
+			}
+
+			originalCalendarValue = val;
 			changes = true;
 		}}
 	>
@@ -100,6 +114,18 @@
 										<Calendar.Day
 											{date}
 											month={month.value}
+											onclick={() => {
+												// for (let calVal of calendarValue) {
+												// 	if (calVal == date) {
+												// 		console.log('cd');
+												// 		continue;
+												// 	}
+												//
+												// 	changesQueue.push(calVal);
+												// }
+												//
+												// console.log('queue:', $state.snapshot(changesQueue));
+											}}
 											class="group transition-all relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-transparent p-0 text-sm font-normal text-foreground hover:border-surface2 data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:bg-text data-[selected]:font-medium data-[disabled]:text-text/30 data-[selected]:text-base data-[unavailable]:text-text/20 data-[unavailable]:line-through"
 										>
 											<div
