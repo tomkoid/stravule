@@ -3,10 +3,34 @@
 	import { Calendar } from 'bits-ui';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
-	import { slide } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { listNoOrderDays } from '$lib/api/orders';
 
-	let calendarValue: DateValue[] = [new CalendarDate(2024, 12, 18)];
-	let changes = false;
+	let calendarValue: DateValue[] = $state([]);
+
+	onMount(async () => {
+		const dayList = await listNoOrderDays();
+
+		for (let day of dayList) {
+			const daySplit = day.split('-');
+			if (daySplit.length != 3) {
+				console.error('day split doesnt have the length of 3');
+			}
+
+			const year = parseInt(daySplit[0]);
+			const month = parseInt(daySplit[1]);
+			const dayDay = parseInt(daySplit[2]);
+
+			console.log(year, month, dayDay);
+
+			const newDate = new CalendarDate(year, month, dayDay);
+			calendarValue.push(newDate);
+		}
+
+		console.log($state.snapshot(calendarValue));
+	});
+
+	let changes = $state(false);
 </script>
 
 <div>
@@ -20,7 +44,7 @@
 	{#if changes}
 		<button
 			class="bg-lime-200 px-2 flex flex-row flex-nowrap items-center gap-2 text-base transition-all rounded-md hover:rounded-xl hover:bg-lime-300 my-2"
-			on:click={() => {
+			onclick={() => {
 				changes = false;
 			}}
 			transition:flyAndScale

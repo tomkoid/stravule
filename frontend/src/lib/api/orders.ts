@@ -89,6 +89,25 @@ export async function listOrderDayExceptions(): Promise<number[]> {
   return res
 }
 
+
+export async function listNoOrderDays(): Promise<string[]> {
+  let params = new URLSearchParams()
+
+  params.append("user_hash", localStorage.getItem("user_hash")!)
+  let req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/no_orders?${params.toString()}`, {
+    method: "GET",
+  })
+
+  if (req.status != 200) {
+    errors.add(await req.text())
+    throw new Error(await req.text())
+  }
+
+  let res: string[] = await req.json()
+
+  return res
+}
+
 export async function setOrderDayException(value: boolean, weekday: number) {
   let params = new URLSearchParams()
 
@@ -96,6 +115,22 @@ export async function setOrderDayException(value: boolean, weekday: number) {
   params.append("week_day", weekday.toString())
 
   const req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/order_day_exception?${params.toString()}`, {
+    method: value ? "POST" : "DELETE",
+  })
+
+  if (req.status != 200) {
+    errors.add(await req.text())
+    throw new Error(await req.text())
+  }
+}
+
+export async function setNoOrderDay(value: boolean, day: string) {
+  let params = new URLSearchParams()
+
+  params.append("user_hash", localStorage.getItem("user_hash")!)
+  params.append("day", day)
+
+  const req = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/no_orders?${params.toString()}`, {
     method: value ? "POST" : "DELETE",
   })
 
