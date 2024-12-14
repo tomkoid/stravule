@@ -94,7 +94,15 @@
 		<Collapsible.Content class="mt-2" transition={slide}>
 			<Settings.Root>
 				<FiltersList.Root {filters} />
-				<Settings.DayExceptions />
+				<div class="mt-6 flex flex-row flex-wrap gap-6 w-full">
+					<div class="flex-1">
+						<Settings.DayExceptions />
+					</div>
+
+					<div class="flex-1">
+						<Settings.Calendar />
+					</div>
+				</div>
 			</Settings.Root>
 		</Collapsible.Content>
 	</Collapsible.Root>
