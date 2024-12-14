@@ -28,6 +28,26 @@
 		}
 	});
 
+	async function toggleDate(date: DateValue) {
+		if (originalCalendarValue && originalCalendarValue.toString().includes(date.toString())) {
+			console.log(`calendar: removing ${date.toString()}`);
+			originalCalendarValue = calendarValue;
+			await setNoOrderDay(false, date.toString());
+		} else {
+			console.log(`calendar: adding ${date.toString()}`);
+			originalCalendarValue = calendarValue;
+			await setNoOrderDay(true, date.toString());
+		}
+
+		originalCalendarValue = calendarValue;
+		changes = true;
+
+		if (pickOrders.value == true) {
+			pickOrders.value = false;
+			pickOrders.value = true;
+		}
+	}
+
 	let changes = $state(false);
 </script>
 
@@ -83,28 +103,7 @@
 											{date}
 											month={month.value}
 											class="group transition-all relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-transparent p-0 text-sm font-normal text-foreground hover:border-surface2 data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:bg-text data-[selected]:font-medium data-[disabled]:text-text/30 data-[selected]:text-base data-[unavailable]:text-text/20 data-[unavailable]:line-through"
-											onclick={async () => {
-												if (
-													originalCalendarValue &&
-													originalCalendarValue.toString().includes(date.toString())
-												) {
-													console.log(`calendar: removing ${date.toString()}`);
-													originalCalendarValue = calendarValue;
-													await setNoOrderDay(false, date.toString());
-												} else {
-													console.log(`calendar: adding ${date.toString()}`);
-													originalCalendarValue = calendarValue;
-													await setNoOrderDay(true, date.toString());
-												}
-
-												originalCalendarValue = calendarValue;
-												changes = true;
-
-												if (pickOrders.value == true) {
-													pickOrders.value = false;
-													pickOrders.value = true;
-												}
-											}}
+											onclick={async () => await toggleDate(date)}
 										>
 											<div
 												class="absolute top-[5px] hidden size-1 rounded-full bg-foreground group-data-[today]:block group-data-[selected]:bg-background"
