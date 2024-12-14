@@ -16,6 +16,7 @@
 		let:months
 		let:weekdays
 		weekdayFormat="short"
+		weekStartsOn={1}
 		fixedWeeks={true}
 		multiple={true}
 	>
