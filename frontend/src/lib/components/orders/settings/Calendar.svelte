@@ -120,18 +120,6 @@
 										<Calendar.Day
 											{date}
 											month={month.value}
-											onclick={() => {
-												// for (let calVal of calendarValue) {
-												// 	if (calVal == date) {
-												// 		console.log('cd');
-												// 		continue;
-												// 	}
-												//
-												// 	changesQueue.push(calVal);
-												// }
-												//
-												// console.log('queue:', $state.snapshot(changesQueue));
-											}}
 											class="group transition-all relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-transparent p-0 text-sm font-normal text-foreground hover:border-surface2 data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:bg-text data-[selected]:font-medium data-[disabled]:text-text/30 data-[selected]:text-base data-[unavailable]:text-text/20 data-[unavailable]:line-through"
 										>
 											<div
