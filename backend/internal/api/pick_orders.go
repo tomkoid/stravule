@@ -52,6 +52,11 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 		return nil, nil, err
 	}
 
+	noOrderDays, err := resolvers.ListNoOrderDays(&userHash)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	// score and compare orders by filters within each order table
 	for i := range resPicked {
 		for j := range resPicked[i] {
@@ -156,6 +161,25 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 				} else {
 					for _, exceptionDay := range orderDayExceptions {
 						if parsedDate.Weekday() == time.Weekday(exceptionDay) {
+							for k := 0; k < len(resPicked[i]); k++ {
+								if resPicked[i][k].Datum == resPicked[i][j].Datum {
+									resPicked[i][k].Pocet = 0
+								}
+							}
+						}
+					}
+					for _, noOrderDay := range noOrderDays {
+						layout := "2006-01-02"
+						noOrderDayParsed, err := time.Parse(layout, noOrderDay)
+						if err != nil {
+							// print to console but don't interrupt the request
+							log.Println(err)
+							continue
+						}
+						noOrderDayParsed = time.Date(noOrderDayParsed.Year(), noOrderDayParsed.Month(), noOrderDayParsed.Day(), 0, 0, 0, 0, time.Local)
+
+						fmt.Println(parsedDate, noOrderDayParsed)
+						if parsedDate == noOrderDayParsed {
 							for k := 0; k < len(resPicked[i]); k++ {
 								if resPicked[i][k].Datum == resPicked[i][j].Datum {
 									resPicked[i][k].Pocet = 0
