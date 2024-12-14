@@ -5,6 +5,7 @@
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import { onMount } from 'svelte';
 	import { listNoOrderDays, setNoOrderDay } from '$lib/api/orders';
+	import { pickOrders } from '$lib/stores/page.svelte';
 
 	let originalCalendarValue: DateValue[] = $state([]);
 	let calendarValue: DateValue[] = $state([]);
@@ -79,6 +80,11 @@
 
 			originalCalendarValue = val;
 			changes = true;
+
+			if (pickOrders.value == true) {
+				pickOrders.value = false;
+				pickOrders.value = true;
+			}
 		}}
 	>
 		<Calendar.Header class="flex items-center justify-between">
