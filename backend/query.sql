@@ -50,13 +50,26 @@ WHERE user_hash = $1;
 SELECT order_days_exceptions FROM users
 WHERE user_hash = $1;
 
+-- name: ListNoOrderDays :exec
+SELECT no_order_days FROM users
+WHERE user_hash = $1;
+
 -- name: AddWeekdayOrderingException :exec
 UPDATE users
 SET order_days_exceptions = array_append(order_days_exceptions, $2)
 WHERE user_hash = $1;
 
+-- name: AddNoOrderDay :exec
+UPDATE users
+SET no_order_days = array_append(no_order_days, $2)
+WHERE user_hash = $1;
 
 -- name: RemoveWeekdayOrderingException :exec
 UPDATE users
 SET order_days_exceptions = array_remove(order_days_exceptions, $2)
+WHERE user_hash = $1;
+
+-- name: RemoveNoOrderDay :exec
+UPDATE users
+SET no_order_days = array_remove(no_order_days, $2)
 WHERE user_hash = $1;

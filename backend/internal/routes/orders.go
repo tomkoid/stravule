@@ -87,6 +87,22 @@ func AddOrderDayException(c echo.Context) error {
 	return c.String(http.StatusOK, "added")
 }
 
+func AddNoOrderDay(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+	day := c.QueryParam("day")
+
+	if day == "" {
+		return c.String(http.StatusBadRequest, "Missing `day` parameter")
+	}
+
+	err := resolvers.AddNoOrderDay(&userHash, day)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.String(http.StatusOK, "added")
+}
+
 func RemoveOrderDayException(c echo.Context) error {
 	userHash := c.QueryParam("user_hash")
 	weekDay := c.QueryParam("week_day")
@@ -117,4 +133,15 @@ func GetOrderDayExceptions(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, orderDayExceptions)
+}
+
+func ListNoOrderDays(c echo.Context) error {
+	userHash := c.QueryParam("user_hash")
+
+	noOrderDays, err := resolvers.ListNoOrderDays(&userHash)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, noOrderDays)
 }
