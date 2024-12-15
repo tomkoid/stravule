@@ -29,7 +29,7 @@
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				<button
-					class="p-1 pr-2 bg-base rounded-xl flex flex-row items-center text-subtext2 gap-1 transition hover:bg-surface0"
+					class="p-1 pr-2 bg-surface0 md:bg-surface1 rounded-xl flex flex-row items-center text-subtext2 gap-1 transition hover:bg-surface2"
 					onclick={() => {
 						// localStorage.removeItem('sid');
 						// goto('/');
