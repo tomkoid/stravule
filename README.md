@@ -24,7 +24,7 @@
 <!-- ABOUT THE PROJECT -->
 ## O projektu 
 
-[![Stravule Showcase][stravule-showcase]](https://example.com)
+<!-- [![Stravule Showcase][stravule-showcase]](https://example.com) -->
 
 *Upozornění: Stravule není jakýmkoli způsobem ovlivněna či spojena se společností VIS Plzeň*.
 
