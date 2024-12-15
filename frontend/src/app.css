@@ -45,8 +45,10 @@ body {
 
 .login-input {
   @apply p-2;
-  @apply bg-mantle;
-  @apply shadow;
-  @apply shadow-mantle;
+  @apply border;
+  @apply border-surface1;
+  @apply bg-surface0;
+  /* @apply shadow; */
+  /* @apply shadow-mantle; */
   @apply rounded;
 }

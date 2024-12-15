@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/login';
+	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
 	let username = $state('');
@@ -20,6 +21,10 @@
 </script>
 
 <div class="flex flex-col mt-5 gap-2">
+	<h1 class="flex flex-row justify-start items-center gap-2 text-2xl font-extrabold mb-1">
+		<Icon class="text-2xl" icon="tabler:login" />
+		Přihlášení
+	</h1>
 	<input
 		class="login-input"
 		type="username"
@@ -29,7 +34,7 @@
 	<input class="login-input" type="password" placeholder="Heslo" bind:value={password} />
 	<input class="login-input" placeholder="Jídelna" bind:value={canteen} />
 	<button
-		class="bg-sblue text-base shadow-sblue rounded-xl mt-5 p-2"
+		class="flex flex-row flex-nowrap w-full justify-center items-center gap-2 bg-blue-300 hover:bg-blue-200 text-base shadow-surface0 rounded-xl hover:rounded-2xl mt-5 p-2 transition-all"
 		onclick={() => {
 			errorMessage = '';
 			login(username, password, canteen)
@@ -43,8 +48,11 @@
 						errorMessage = e.message;
 					}
 				});
-		}}>Login</button
+		}}
 	>
+		<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:login" />
+		Přihlásit se
+	</button>
 	<p class="text-ctp-red">{errorMessage}</p>
 </div>
 
