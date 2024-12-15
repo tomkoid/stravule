@@ -33,7 +33,7 @@
 
 {#if filters}
 	{#each filters as filter, i}
-		<div class="flex flex-row items-center gap-4">
+		<div class="flex flex-row items-center gap-2">
 			<p class="text">{filter.value}</p>
 
 			<DropdownMenu.Root
@@ -43,7 +43,7 @@
 			>
 				<DropdownMenu.Trigger onclick={() => (editFilter = filter)}>
 					<button
-						class={`p-1 bg-base rounded-xl flex flex-row items-center text-subtext2 gap-1 transition hover:bg-surface0 ${dropdownShown[i] ? 'bg-surface1 hover:bg-surface1' : ''}`}
+						class={`p-1 rounded-xl flex flex-row items-center text-subtext2 gap-1 transition hover:bg-surface0 ${dropdownShown[i] ? 'bg-surface1 hover:bg-surface1' : ''}`}
 					>
 						<Icon width={16} icon="tabler:dots" />
 					</button>
