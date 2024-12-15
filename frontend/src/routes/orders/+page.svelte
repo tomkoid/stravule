@@ -76,12 +76,30 @@
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
-	<div class="flex gap-2">
-		<Checkbox
-			className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
-			bind:checked={pickOrders.value}
-			label="Zobrazit vybrané objednávky od Stravule"
-		/>
+	<div class="flex flex-row justify-between">
+		<h1 class="text-2xl font-extrabold">Objednávky</h1>
+		{#if pickOrders.value && orders && getDifference(orders, originalOrders) > 0}
+			<div>
+				<button
+					onclick={async () => {
+						await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+						originalOrders = orders!;
+						pickOrders.value = false;
+					}}
+					class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
+				>
+					<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
+					Potrvdit změny od Stravule a nastavit objednávky (změn: {getDifference(
+						orders!,
+						originalOrders
+					)})</button
+				>
+			</div>
+		{:else if pickOrders.value && orders && getDifference(orders, originalOrders) == 0}
+			<div class="flex flex-row items-center gap-1">
+				<p class="text-subtext0">--- Žádné změny od Stravule ---</p>
+			</div>
+		{/if}
 	</div>
 
 	<Collapsible.Root bind:open={filterTabOpened}>
@@ -97,42 +115,26 @@
 		</Collapsible.Trigger>
 		<Collapsible.Content class="mt-2" transition={slide}>
 			<Settings.Root>
+				<div class="flex gap-2">
+					<Checkbox
+						className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
+						bind:checked={pickOrders.value}
+						label="Zobrazit vybrané objednávky od Stravule"
+					/>
+				</div>
 				<FiltersList.Root {filters} />
-				<div class="mt-6 flex flex-row flex-wrap gap-6 w-full">
-					<div class="flex-1">
+				<div class="flex flex-row flex-wrap gap-6 w-full">
+					<div class="flex-1 mt-6">
 						<Settings.DayExceptions />
 					</div>
 
-					<div class="flex-1">
+					<div class="flex-1 mt-6">
 						<Settings.Calendar />
 					</div>
 				</div>
 			</Settings.Root>
 		</Collapsible.Content>
 	</Collapsible.Root>
-
-	{#if pickOrders.value && orders && getDifference(orders, originalOrders) > 0}
-		<div>
-			<button
-				onclick={async () => {
-					await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
-					originalOrders = orders!;
-					pickOrders.value = false;
-				}}
-				class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
-			>
-				<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
-				Potrvdit změny od Stravule a nastavit objednávky (změn: {getDifference(
-					orders!,
-					originalOrders
-				)})</button
-			>
-		</div>
-	{:else if pickOrders.value && orders && getDifference(orders, originalOrders) == 0}
-		<div class="flex flex-row items-center gap-1">
-			<p class="text-subtext0">--- Žádné změny od Stravule ---</p>
-		</div>
-	{/if}
 
 	{#if orders && selected}
 		<OrderList {orders} {selected} />

@@ -2,6 +2,7 @@
 	import { Avatar, DropdownMenu } from 'bits-ui';
 	import { flyAndScale } from '$lib/utils/flyAndScale';
 	import Icon from '@iconify/svelte';
+	import { slide } from 'svelte/transition';
 
 	let dropdownItemClass = `flex h-10 select-none items-center rounded-button py-2 pl-2 pr-1.5 text-sm font-medium !ring-0 !ring-transparent data-[highlighted]:bg-surface0 rounded transition`;
 
@@ -13,11 +14,15 @@
 </script>
 
 <div
-	class="flex mbl:flex-row flex-col bg-crust bg-opacity-75 backdrop-blur-sm shadow shadow-crust justify-center mbl:justify-between items-center gap-6 mbl:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-6 sm:px-8 md:px-10 lg:px-20 xl:px-40"
+	class="flex mbl:flex-row flex-col bg-crust md:bg-navbar bg-opacity-75 backdrop-blur-sm shadow shadow-navbar justify-center mbl:justify-between items-center gap-6 mbl:gap-2 top-0 left-0 min-h-[50px] pt-2 pb-2 w-full mb-5 px-6 sm:px-8 md:px-10 lg:px-20 xl:px-40"
 >
 	<div class="flex flex-row items-center gap-2">
 		<img src="/favicon.png" alt="Stravule" class="w-8 h-8" />
-		<p class="font-bold text-2xl">STRAVULE</p>
+		<p
+			class="text-2xl font-bold bg-gradient-to-r from-mauve to-orange-300 bg-clip-text text-transparent"
+		>
+			Stravule
+		</p>
 	</div>
 
 	{#if loggedIn && localStorage.getItem('jmeno')}

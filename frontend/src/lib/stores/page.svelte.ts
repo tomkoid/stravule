@@ -10,7 +10,7 @@ export const pageLoading = {
 }
 
 
-let _pickOrdersRune: boolean = $state(false)
+let _pickOrdersRune: boolean = $state(true)
 
 export const pickOrders = {
   get value() {

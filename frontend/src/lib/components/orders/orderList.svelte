@@ -18,7 +18,7 @@
 	};
 </script>
 
-<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4 mt-3">
+<div transition:flyAndScale class="flex flex-col flex-nowrap gap-4">
 	{#each orders as orderTable, orderTableIndex}
 		{#if orderTable}
 			<div
@@ -62,7 +62,7 @@
 					{/each}
 				</div>
 				<div>
-					<p class="text-text text-xl font-bold">
+					<p class="text-text text-xl font-medium">
 						{formatDate(orderTable[0].datum)}
 					</p>
 				</div>
