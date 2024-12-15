@@ -35,12 +35,16 @@
 	let mountOrdersLoaded = $state(false);
 	let originalOrders = $state<Order[][]>([]);
 	onMount(async () => {
+		originalOrders = await loadOrders(
+			localStorage.getItem('sid')!,
+			localStorage.getItem('canteen')!,
+			false
+		);
 		orders = await loadOrders(
 			localStorage.getItem('sid')!,
 			localStorage.getItem('canteen')!,
 			pickOrders.value
 		);
-		originalOrders = orders;
 		filters = await loadFilters();
 		renderOrders(orders);
 		mountOrdersLoaded = true;
@@ -73,39 +77,35 @@
 		}
 		return difference;
 	}
-
-	let areChanges = $derived(
-		pickOrders.value && orders && getDifference(orders, originalOrders) > 0
-	);
-	let areNoChanges = $derived(
-		pickOrders.value && orders && getDifference(orders, originalOrders) == 0
-	);
 </script>
 
 <div class="flex flex-col flex-nowrap gap-3">
 	<div class="flex flex-wrap gap-2 flex-row justify-between">
 		<h1 class="text-2xl font-extrabold">Objednávky</h1>
-		{#if areChanges}
-			<div>
-				<button
-					onclick={async () => {
-						await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
-						originalOrders = orders!;
-						pickOrders.value = false;
-					}}
-					class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-2xl"
-				>
-					<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
-					Potrvdit změny od Stravule a nastavit objednávky (změn: {getDifference(
-						orders!,
-						originalOrders
-					)})</button
-				>
-			</div>
-		{:else if areNoChanges}
-			<div class="flex flex-row items-center gap-1">
-				<p class="text-subtext0">--- Žádné změny od Stravule ---</p>
-			</div>
+		{#if orders && pickOrders.value == true}
+			{#if getDifference(orders, originalOrders) > 0}
+				<div>
+					<button
+						onclick={async () => {
+							await sendOrders(localStorage.getItem('sid')!, localStorage.getItem('canteen')!);
+							originalOrders = orders!;
+							pickOrders.value = false;
+							pickOrders.value = true;
+						}}
+						class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-2xl"
+					>
+						<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
+						Potrvdit změny od Stravule a nastavit objednávky (změn: {getDifference(
+							orders!,
+							originalOrders
+						)})</button
+					>
+				</div>
+			{:else}
+				<div class="flex flex-row items-center gap-1">
+					<p class="text-subtext0">--- Žádné změny od Stravule ---</p>
+				</div>
+			{/if}
 		{/if}
 	</div>
 
