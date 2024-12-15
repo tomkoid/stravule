@@ -12,7 +12,7 @@
   <p align="center">
     Automatický vybírač obědů pro <a href="https://strava.cz">strava.cz</a>
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Oficiální stránka »</strong></a>
+    <a href="https://stravule.tomkoid.cz"><strong>Oficiální stránka »</strong></a>
     <br />
     <br />
     <a href="https://codeberg.org/tomkoid/stravule/issues/new">Nahlásit Bug</a>
