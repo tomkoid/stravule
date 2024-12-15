@@ -63,6 +63,7 @@ Předtím, než začnete, ujistěte se, že máte nainstalovaný Docker společn
 Poté stačí pouze jít do naklonované složky a spustit:
 
 ```bash
+cp .env.example .env # nastavení databáze
 docker compose up --build
 ```
 
