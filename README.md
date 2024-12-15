@@ -91,7 +91,7 @@ Otevřete terminál spustťe tyto příkazy.
    ```bash
    cd frontend/
    npm install
-   bun run dev
+   npm run dev
    ```
 
 <!-- USAGE EXAMPLES -->
