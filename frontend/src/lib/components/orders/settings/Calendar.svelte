@@ -60,9 +60,9 @@
 		<div class="flex flex-col">
 			<div class="flex flex-row items-center gap-2">
 				<Icon icon="mdi:calendar" class="text-2xl" />
-				<p class="text-lg font-bold">Kdy odhlásit obědy?</p>
+				<p class="text-lg font-bold">Kdy odhlásit objednávky?</p>
 			</div>
-			<p class="text-sm text-subtext0">Vyber si dny, kdy automaticky odhlásit oběd.</p>
+			<p class="text-sm text-subtext0">Vyber si dny, kdy automaticky odhlásit objednávky.</p>
 		</div>
 		<Calendar.Root
 			class="mt-4 rounded-[15px] border border-surface1 bg-mantle/30 p-[22px] shadow-sm shadow-surface0 max-w-fit"

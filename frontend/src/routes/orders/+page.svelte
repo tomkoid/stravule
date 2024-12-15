@@ -80,7 +80,7 @@
 		<Checkbox
 			className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
 			bind:checked={pickOrders.value}
-			label="Zobrazit vybrané obědy od Stravule"
+			label="Zobrazit vybrané objednávky od Stravule"
 		/>
 	</div>
 
@@ -93,7 +93,7 @@
 					<Icon class="text-xl" icon="mdi:caret" />
 				{/if}
 			</div>
-			<p>Nastavení obědů</p>
+			<p>Nastavení objednávek</p>
 		</Collapsible.Trigger>
 		<Collapsible.Content class="mt-2" transition={slide}>
 			<Settings.Root>
@@ -122,7 +122,7 @@
 				class="flex flex-row items-center w-fit gap-1 px-2 py-1 rounded-xl bg-blue-300 text-base transition-all hover:rounded-full"
 			>
 				<Icon class="min-w-[16px] min-h-[16px]" color="inherit" icon="mdi:check" />
-				Potrvdit změny od Stravule a nastavit obědy (změn: {getDifference(
+				Potrvdit změny od Stravule a nastavit objednávky (změn: {getDifference(
 					orders!,
 					originalOrders
 				)})</button
@@ -137,7 +137,7 @@
 	{#if orders && selected}
 		<OrderList {orders} {selected} />
 	{:else}
-		<p>Načítání obědů..</p>
+		<p>Načítání objednávek..</p>
 	{/if}
 </div>
 
