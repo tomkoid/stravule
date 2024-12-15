@@ -5,9 +5,13 @@ import (
 	"log"
 	"strings"
 	"time"
+	"unicode"
 
 	"codeberg.org/tomkoid/stravule/backend/internal/resolvers"
 	"codeberg.org/tomkoid/stravule/backend/internal/utils"
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 func CheckOrderingTime(orderingEndTime string) (bool, error) {
@@ -30,6 +34,16 @@ func deepCopyOrders(src [][]order) [][]order {
 		copy(dest[i], src[i])
 	}
 	return dest
+}
+
+func normalizeString(s string) (string, error) {
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	result, _, err := transform.String(t, s)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.ToLower(result), nil
 }
 
 // returns a list of picked orders, originally used orders and used filters and possibly an error
@@ -75,15 +89,34 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 				continue
 			}
 
+			orderNazev, err := normalizeString(order.Nazev)
+			if err != nil {
+				// log it and use the not normalized val
+				log.Println(err)
+				orderNazev = order.Nazev
+			}
+
 			for _, filter := range filters.Include {
-				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter.Value)) {
+				filterNazev, err := normalizeString(filter.Value)
+				if err != nil {
+					log.Println(err)
+					filterNazev = filter.Value
+				}
+
+				if strings.Contains(orderNazev, filterNazev) {
 					order.Score += filter.Weight
 					order.selectedByIncludeFilter = true
 				}
 			}
 
 			for _, filter := range filters.Exclude {
-				if strings.Contains(strings.ToLower(order.Nazev), strings.ToLower(filter.Value)) {
+				filterNazev, err := normalizeString(filter.Value)
+				if err != nil {
+					log.Println(err)
+					filterNazev = filter.Value
+				}
+
+				if strings.Contains(orderNazev, filterNazev) {
 					order.Score -= filter.Weight
 					order.selectedByExcludeFilter = true
 				}
