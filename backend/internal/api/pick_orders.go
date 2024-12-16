@@ -159,15 +159,13 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 					continue
 				}
 
-				if resPicked[i][highestScoreIdx].Score != 0 {
-					if j != highestScoreIdx {
-						resPicked[i][j].Pocet = 0
-					}
+				if j != highestScoreIdx {
+					resPicked[i][j].Pocet = 0
 				}
 			}
 
 			// order the order if there is a positive score and it is the highest score in the orderTable
-			if resPicked[i][highestScoreIdx].Score > 0 {
+			if resPicked[i][highestScoreIdx].Score >= 0 {
 				orderingTimeCheck, err := CheckOrderingTime(resPicked[i][highestScoreIdx].CasKonec)
 				if err != nil {
 					return nil, nil, err
@@ -183,9 +181,6 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 				}
 
 				resPicked[i][highestScoreIdx].Pocet = 1
-			} else if resPicked[i][highestScoreIdx].Score == 0 {
-				{
-				}
 			} else {
 				resPicked[i][highestScoreIdx].Pocet = 0
 			}
