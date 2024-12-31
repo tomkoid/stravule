@@ -8,6 +8,7 @@
 	let password = $state('');
 	let canteen = $state('');
 	let errorMessage = $state('');
+
 	onMount(() => {
 		if (localStorage) {
 			if (localStorage.getItem('sid')) {
@@ -18,6 +19,15 @@
 			localStorage.getItem('canteen') ? (canteen = localStorage.getItem('canteen')!) : null;
 		}
 	});
+
+	let confirmButton: HTMLButtonElement | undefined = $state();
+
+	const enterLogin = (e: KeyboardEvent) => {
+		if (e.key == 'Enter' && confirmButton) {
+			e.preventDefault();
+			confirmButton.click();
+		}
+	};
 </script>
 
 <div class="flex flex-col mt-5 gap-2">
@@ -30,10 +40,23 @@
 		type="username"
 		placeholder="Uživatelské jméno"
 		bind:value={username}
+		onkeypresscapture={enterLogin}
 	/>
-	<input class="login-input" type="password" placeholder="Heslo" bind:value={password} />
-	<input class="login-input" placeholder="Jídelna" bind:value={canteen} />
+	<input
+		class="login-input"
+		type="password"
+		placeholder="Heslo"
+		bind:value={password}
+		onkeypresscapture={enterLogin}
+	/>
+	<input
+		class="login-input"
+		placeholder="Jídelna"
+		bind:value={canteen}
+		onkeypresscapture={enterLogin}
+	/>
 	<button
+		bind:this={confirmButton}
 		class="flex flex-row flex-nowrap w-full justify-center items-center gap-2 bg-blue-300 hover:bg-blue-200 text-base shadow-surface0 rounded-xl hover:rounded-2xl mt-5 p-2 transition-all"
 		onclick={() => {
 			errorMessage = '';
