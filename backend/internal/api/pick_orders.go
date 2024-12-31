@@ -211,7 +211,6 @@ func PickOrders(sid string, canteen string, userHash string) ([][]order, [][]ord
 						}
 						noOrderDayParsed = time.Date(noOrderDayParsed.Year(), noOrderDayParsed.Month(), noOrderDayParsed.Day(), 0, 0, 0, 0, time.Local)
 
-						fmt.Println(parsedDate, noOrderDayParsed)
 						if parsedDate == noOrderDayParsed {
 							for k := 0; k < len(resPicked[i]); k++ {
 								if resPicked[i][k].Datum == resPicked[i][j].Datum {

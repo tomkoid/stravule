@@ -69,8 +69,6 @@ func GetFilters(userHash *string) (*Filters, error) {
 	filters.Include = sortFilters(filters.Include)
 	filters.Exclude = sortFilters(filters.Exclude)
 
-	log.Println(filters.Include)
-
 	return &filters, nil
 }
 
