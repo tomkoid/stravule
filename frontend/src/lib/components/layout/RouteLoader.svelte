@@ -1,6 +1,6 @@
 <div class="gradient-loader show"></div>
 
-<style lang="postcss">
+<style>
 	div {
 		@apply fixed w-full top-0 left-0 h-1.5 opacity-0 -translate-x-full transition-all;
 	}
