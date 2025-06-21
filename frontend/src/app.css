@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@reference 'tailwindcss';
 
 @theme {
   --color-base: hsl(210, 11%, 11%);
@@ -14,7 +13,7 @@
   --color-selected-order: hsl(287 17% 30%);
   --color-selected-order-checkbox: hsl(287 64% 70%);
   --color-selected-order-checkbox-hover: hsl(287 64% 74%);
-  --color-selected-order-text: hsl(287 64% 80%);
+  --color-selected-order-text: hsl(287, 64%, 80%);
   --color-text: hsl(60, 10%, 92%);
   --color-subtext2: hsl(240, 10%, 88%);
   --color-subtext1: hsl(240, 10%, 78%);
@@ -30,13 +29,12 @@
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  @apply text-text;
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  @apply bg-base;
+  @apply text-text bg-base;
 }
 
 /**/

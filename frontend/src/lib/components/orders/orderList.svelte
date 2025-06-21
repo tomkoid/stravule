@@ -54,7 +54,7 @@
 								<div class="ml-[28px]"></div>
 							{/if}
 							<div
-								class={`flex flex-wrap flex-row break ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text font-medium' : ''}`}
+								class={`flex flex-wrap flex-row break ${(!checkIfAfterNow(order.casKonec) || order.omezeni.endsWith('B')) && !selected[orderTableIndex][orderIndex] ? 'text-subtext1' : ''} ${selected[orderTableIndex][orderIndex] ? 'text-selected-order-text font-semibold' : ''}`}
 							>
 								{order.id + 1}. {order.nazev}
 							</div>
