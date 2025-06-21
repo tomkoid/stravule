@@ -1,6 +1,30 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss';
+@reference 'tailwindcss';
+
+@theme {
+  --color-base: hsl(210, 11%, 11%);
+  --color-base2: #050609;
+  --color-crust: hsl(240deg 8% 8%);
+  --color-navbar: hsl(240deg 8% 16%);
+  --color-mantle: hsl(240deg 8% 9%);
+  --color-surface0: hsl(240deg 8% 18%);
+  --color-surface01: hsl(240deg 8% 24%);
+  --color-surface1: hsl(240deg 8% 24%);
+  --color-surface2: hsl(240deg 8% 32%);
+  --color-selected-order: hsl(287 17% 30%);
+  --color-selected-order-checkbox: hsl(287 64% 70%);
+  --color-selected-order-checkbox-hover: hsl(287 64% 74%);
+  --color-selected-order-text: hsl(287 64% 80%);
+  --color-text: hsl(60, 10%, 92%);
+  --color-subtext2: hsl(240, 10%, 88%);
+  --color-subtext1: hsl(240, 10%, 78%);
+  --color-subtext0: hsl(240, 10%, 64%);
+  --color-success: #C0D684;
+  --color-success2: #CBEAA6;
+  --color-mauve: #BAA5FF;
+  --color-sblue: #8ecae6;
+  --color-sgreen: #80ed99;
+}
 
 :not(path) {
   font-family: 'Inter', sans-serif;
@@ -9,11 +33,12 @@
   @apply text-text;
 }
 
-body {
+html, body {
   margin: 0;
   padding: 0;
   @apply bg-base;
 }
+
 /**/
 /* @media(max-width: 500px) { */
 /*   body { */

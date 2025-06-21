@@ -66,3 +66,7 @@
 <div class="mb-5 mx-5 md:mx-10 lg:mx-20 xl:mx-40">
 	{@render children()}
 </div>
+
+<style lang="postcss">
+	@reference "tailwindcss";
+</style>

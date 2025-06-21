@@ -110,7 +110,7 @@
 	</div>
 
 	<Collapsible.Root bind:open={filterTabOpened}>
-		<Collapsible.Trigger class="flex flex-row items-center gap-1">
+		<Collapsible.Trigger class="flex flex-row items-center gap-1 cursor-pointer">
 			<div>
 				{#if filterTabOpened}
 					<Icon class="text-xl rotate-180" icon="mdi:caret" />
@@ -120,26 +120,31 @@
 			</div>
 			<p>Nastavení objednávek</p>
 		</Collapsible.Trigger>
-		<Collapsible.Content class="mt-2" transition={slide}>
-			<Settings.Root>
-				<div class="flex gap-2">
-					<Checkbox
-						className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
-						bind:checked={pickOrders.value}
-						label="Zobrazit vybrané objednávky od Stravule"
-					/>
-				</div>
-				<FiltersList.Root {filters} />
-				<div class="flex flex-row flex-wrap gap-6 w-full">
-					<div class="flex-1 mt-6">
-						<Settings.DayExceptions />
-					</div>
+		<!-- <Collapsible.Content class="mt-2" forceMount transition={slide}> -->
+		<Collapsible.Content class="mt-2" forceMount>
+			{#if filterTabOpened}
+				<Settings.Root>
+					<div class="m-0" transition:slide>
+						<div class="flex gap-2">
+							<Checkbox
+								className="size-[25px] rounded-md border border-surface1 bg-surface0 data-[state=unchecked]:bg-surface0 data-[state=unchecked]:hover:bg-surface1 data-[state=checked]:hover:bg-mantle"
+								bind:checked={pickOrders.value}
+								label="Zobrazit vybrané objednávky od Stravule"
+							/>
+						</div>
+						<FiltersList.Root {filters} />
+						<div class="flex flex-row flex-wrap gap-6 w-full">
+							<div class="flex-1 mt-6">
+								<Settings.DayExceptions />
+							</div>
 
-					<div class="flex-1 mt-6">
-						<Settings.Calendar />
+							<div class="flex-1 mt-6">
+								<Settings.Calendar />
+							</div>
+						</div>
 					</div>
-				</div>
-			</Settings.Root>
+				</Settings.Root>
+			{/if}
 		</Collapsible.Content>
 	</Collapsible.Root>
 

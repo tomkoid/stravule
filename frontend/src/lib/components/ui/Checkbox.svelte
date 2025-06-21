@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { Checkbox, Label, type CustomEventHandler } from 'bits-ui';
+	import { Checkbox, Label } from 'bits-ui';
 
 	interface Props {
 		checked: boolean | undefined;
 		label?: string;
 		className?: string;
-		onclick?: (e: CustomEventHandler<MouseEvent, HTMLButtonElement>) => void;
+		onclick?: (e: any) => void;
 		[props: string]: any;
 	}
 
@@ -25,22 +25,18 @@
 	<Checkbox.Root
 		bind:checked
 		{...props}
-		on:click={onclick!}
+		onclick={onclick!}
 		id="terms"
 		aria-labelledby="terms-label"
 		class={`peer inline-flex items-center justify-center transition-all duration-150 ease-in-out active:scale-98 ${className}`}
 	>
-		<Checkbox.Indicator
-			let:isChecked
-			let:isIndeterminate
-			class="inline-flex items-center justify-center text-background"
-		>
-			{#if isChecked}
+		{#snippet children({ checked, indeterminate })}
+			{#if checked}
 				<Icon width="20" icon="material-symbols:check-rounded" />
-			{:else if isIndeterminate}
+			{:else if indeterminate}
 				-
 			{/if}
-		</Checkbox.Indicator>
+		{/snippet}
 	</Checkbox.Root>
 	{#if label !== ''}
 		<Label.Root
